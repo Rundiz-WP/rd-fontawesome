@@ -1,0 +1,188 @@
+# Copyright (C) 2022 Vee Winch
+# This file is distributed under the MIT.
+msgid ""
+msgstr ""
+"Project-Id-Version: Rundiz Font Awesome 1.0.0a20220119\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/rd-fontawesome\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-01-19T00:29:57+07:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0\n"
+"X-Domain: rd-fontawesome\n"
+
+#. Plugin Name of the plugin
+#: App/Controllers/Admin/Settings.php:112
+msgid "Rundiz Font Awesome"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://rundiz.com/?p=319"
+msgstr ""
+
+#. Description of the plugin
+msgid "Use Font Awesome from your host and update from GitHub."
+msgstr ""
+
+#. Author of the plugin
+msgid "Vee Winch"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://rundiz.com"
+msgstr ""
+
+#: App/Controllers/Admin/Settings.php:41
+msgid "Dismiss this notice."
+msgstr ""
+
+#: App/Controllers/Admin/Settings.php:42
+msgid "Loading"
+msgstr ""
+
+#: App/Controllers/Admin/Settings.php:112
+msgid "Rundiz Font Awesome settings"
+msgstr ""
+
+#: App/Controllers/Admin/Settings.php:139
+msgid "Invalid request."
+msgstr ""
+
+#: App/Controllers/Admin/SettingsAjax.php:105
+msgid "Success! You have installed latest version of Font Awesome."
+msgstr ""
+
+#: App/Controllers/Admin/SettingsAjax.php:119
+msgid "Success! Your Font Awesome is already latest version."
+msgstr ""
+
+#: App/Controllers/Admin/SettingsAjax.php:169
+msgid "Saved successfully."
+msgstr ""
+
+#. translators: %1$s the downloaded file path.
+#: App/Libraries/Url.php:80
+msgid "The downloaded file is not zip file. (%1$s)."
+msgstr ""
+
+#. translators: %1$s the plugin directory path.
+#: App/Libraries/Url.php:95
+msgid "Unable to create directory at %1$s"
+msgstr ""
+
+#: App/Libraries/Url.php:180
+msgid "Invalid Font Awesome files."
+msgstr ""
+
+#: App/Views/admin/settings_v.php:7
+msgid "Server info"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:14
+msgid "Download type"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:17
+msgid "GitHub API"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:17
+msgid "Default"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:18
+msgid "GitHub"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:23
+msgid "Latest Font Awesome version"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:26
+msgid "Retrieve latest version info."
+msgstr ""
+
+#: App/Views/admin/settings_v.php:30
+msgid "Installed Font Awesome version"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:33
+msgid "Install latest version"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:37
+msgid "Unload enqueued CSS handles"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:41
+msgid "Dequeue the other Font Awesome CSS handles that was enqueued by other plugins or themes."
+msgstr ""
+
+#. translators: %1$s comma sign.
+#: App/Views/admin/settings_v.php:44
+#: App/Views/admin/settings_v.php:57
+msgid "Separate values by %1$s."
+msgstr ""
+
+#: App/Views/admin/settings_v.php:50
+msgid "Unload enqueued JS handles"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:54
+msgid "Dequeue the  other Font Awesome JavaScript handles that was enqueued by other plugins or themes."
+msgstr ""
+
+#: App/Views/admin/settings_v.php:63
+msgid "Do not enqueue assets"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:67
+msgid "Check this box to do not enqueue assets for this plugin."
+msgstr ""
+
+#: App/Views/admin/settings_v.php:68
+msgid "The assets for this plugin such as CSS, fonts won't be loaded."
+msgstr ""
+
+#: App/Views/admin/settings_v.php:82
+msgid "WordPress"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:86
+msgid "PHP"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:90
+msgid "Execution timeout"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:94
+msgid "Memory limit"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:98
+msgid "WordPress Memory limit"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:104
+msgid "Plugin version"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:108
+msgid "Writable folders and files"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:114
+msgid "Yes"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:116
+msgid "No"
+msgstr ""
+
+#: App/Views/admin/settings_v.php:118
+msgid "Not exists"
+msgstr ""
