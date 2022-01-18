@@ -15,6 +15,8 @@ Use Font Awesome icons from your own host/server. Update the latest releases fro
 
 This plugin did not use CDN (content delivery network). If you want to use CDN, please use official Font Awesome plugin instead.
 
+Font Awesome files are belong to https://fontawesome.com/
+
 == Frequently Asked Questions ==
 
 = Can I use it on my web hosting or server? =
