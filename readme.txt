@@ -3,7 +3,7 @@ Contributors: okvee
 Tags: fontawesome, font awesome, icons
 Requires at least: 5.0
 Tested up to: 5.9
-Stable tag: 1.0.0a20220119
+Stable tag: 0.0.1
 Requires PHP: 7.0
 License: MIT
 License URI: http://opensource.org/licenses/MIT
