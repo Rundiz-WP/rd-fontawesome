@@ -95,7 +95,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                         if (!is_wp_error($dlResult)) {
                             $Settings->saveSettings([
                                 'download_type' => $downloadType,
-                                'fontawesome_version' => $latestVersion,
+                                'fontawesome_version' => strip_tags($latestVersion),
                             ]);
                             $output['allSettings'] = $Settings->getAllSettings();
                             $output['downloadLink'] = $downloadLink;
