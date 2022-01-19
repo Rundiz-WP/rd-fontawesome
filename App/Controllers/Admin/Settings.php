@@ -123,6 +123,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
             // check permission.
             if (!current_user_can('manage_options')) {
                 wp_die(__('You do not have permission to access this page.'));
+                exit();
             }
 
             $output = [];
@@ -137,6 +138,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
                 // if method POST.
                 // save via AJAX only, this process should just die.
                 wp_die(__('Invalid request.', 'rd-fontawesome'));
+                exit();
             }// endif $_POST
 
             $this->Loader->loadView('admin/settings_v', $output);

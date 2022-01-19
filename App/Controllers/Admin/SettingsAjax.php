@@ -32,19 +32,6 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
 
 
             /**
-             * {@inheritDoc}
-             */
-            public function registerHooks()
-            {
-                if (is_admin()) {
-                    add_action('wp_ajax_rdfontawesome_retrievelatestversion', [$this, 'retrieveLatestFAVersion']);
-                    add_action('wp_ajax_rdfontawesome_installlatestversion', [$this, 'installLatestFAVersion']);
-                    add_action('wp_ajax_rdfontawesome_savesettings', [$this, 'saveSettings']);
-                }
-            }// registerHooks
-
-
-            /**
              * Download and install latest Font Awesome version.
              */
             public function installLatestFAVersion()
@@ -52,6 +39,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                 // check permission.
                 if (!current_user_can('manage_options')) {
                     wp_die(__('You do not have permission to access this page.'));
+                    exit();
                 }
 
                 $output = [];
@@ -63,13 +51,19 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
 
                 $latestInfo = $this->Url->retrieveLatestVersion($downloadType);
                 $downloadLink = ($latestInfo['downloadLink'] ?? null);
-                $latestVersion = ($latestInfo['tagVersion'] ?? null);
+                $latestVersion = (isset($latestInfo['tagVersion']) ? strip_tags($latestInfo['tagVersion']) : null);
                 unset($latestInfo);
 
                 $statusCode = 200;
                 if (is_null($downloadLink) || is_null($latestVersion)) {
+                    // if download link is not found or latest version info is not found.
                     $statusCode = 404;
+                    $output['formResult'] = 'error';
+                    $output['formResultMessage'] = [
+                        __('Unable to retrieve latest version from GitHub.', 'rd-fontawesome'),
+                    ];
                 } elseif (is_string($downloadLink) && !empty($downloadLink) && is_string($latestVersion)) {
+                    // if found download link and latest version info.
                     if (
                         empty($allSettings) || 
                         (
@@ -93,14 +87,14 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                             if (false === $dlResult) {
                                 // if there are some errors but can continue.
                                 $output['tempDir'] = $this->Url->tempDir;
-                                $output['tempDirExists'] = is_dir($this->Url->tempDir);
+                                $output['tempDirExists'] = (is_string($this->Url->tempDir) ? is_dir($this->Url->tempDir) : false);
                             }
                         }
 
                         if (!is_wp_error($dlResult)) {
                             $Settings->saveSettings([
                                 'download_type' => $downloadType,
-                                'fontawesome_version' => strip_tags($latestVersion),
+                                'fontawesome_version' => $latestVersion,
                             ]);
                             $output['allSettings'] = $Settings->getAllSettings();
                             $output['downloadLink'] = $downloadLink;
@@ -112,6 +106,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                         }
                         unset($dlResult);
                     } else {
+                        // if already installed and is using latest version.
                         $output['skippedDownload'] = [
                             'result' => true,
                             'latestVersion' => $latestVersion,
@@ -124,11 +119,33 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                             __('Success! Your Font Awesome is already latest version.', 'rd-fontawesome'),
                         ];
                     }
+                } else {
+                    // if unknown errors.
+                    $statusCode = 500;
+                    $output['formResult'] = 'error';
+                    $output['formResultMessage'] = [
+                        __('An unknown error occur!', 'rd-fontawesome'),
+                    ];
+                    $output['downloadLink'] = $downloadLink;
+                    $output['latestVersion'] = $latestVersion;
                 }
 
                 unset($allSettings, $downloadType, $downloadLink, $latestVersion, $Settings);
                 wp_send_json($output, $statusCode);
             }// installLatestFAVersion
+
+
+            /**
+             * {@inheritDoc}
+             */
+            public function registerHooks()
+            {
+                if (is_admin()) {
+                    add_action('wp_ajax_rdfontawesome_retrievelatestversion', [$this, 'retrieveLatestFAVersion']);
+                    add_action('wp_ajax_rdfontawesome_installlatestversion', [$this, 'installLatestFAVersion']);
+                    add_action('wp_ajax_rdfontawesome_savesettings', [$this, 'saveSettings']);
+                }
+            }// registerHooks
 
 
             /**
@@ -139,6 +156,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                 // check permission.
                 if (!current_user_can('manage_options')) {
                     wp_die(__('You do not have permission to access this page.'));
+                    exit();
                 }
 
                 $output = [];
@@ -160,6 +178,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                 // check permission.
                 if (!current_user_can('manage_options')) {
                     wp_die(__('You do not have permission to access this page.'));
+                    exit();
                 }
 
                 $output = [];
