@@ -87,7 +87,7 @@ class RdFontAwesomeSettings {
                         'data': ajaxdata
                     })
                     .done((data, textStatus, jqXHR) => {
-                        if (data.tagVersion) {
+                        if (data && data.tagVersion) {
                             let previewHTML = data.tagVersion;
                             installedVersionElement.innerHTML = previewHTML;
 
@@ -254,7 +254,7 @@ class RdFontAwesomeSettings {
                         'data': ajaxdata
                     })
                     .done((data, textStatus, jqXHR) => {
-                        if (data.downloadLink && data.tagVersion) {
+                        if (data && data.downloadLink && data.tagVersion) {
                             let previewHTML = '<a href="' + data.downloadLink + '" target="_blank">' + data.tagVersion + '</a>';
                             latestVersionElement.innerHTML = previewHTML;
                         } else {
