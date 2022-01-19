@@ -47,5 +47,5 @@
 .dev-notes export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
-.imgages-source export-ignore
+.images-source export-ignore
 assets/vendor/.gitkeep export-ignore
