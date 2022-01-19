@@ -49,6 +49,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
              */
             public function installLatestFAVersion()
             {
+                // check permission.
+                if (!current_user_can('manage_options')) {
+                    wp_die(__('You do not have permission to access this page.'));
+                }
+
                 $output = [];
                 check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
                 $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
@@ -131,6 +136,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
              */
             public function retrieveLatestFAVersion()
             {
+                // check permission.
+                if (!current_user_can('manage_options')) {
+                    wp_die(__('You do not have permission to access this page.'));
+                }
+
                 $output = [];
                 check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
                 $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
@@ -147,6 +157,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
              */
             public function saveSettings()
             {
+                // check permission.
+                if (!current_user_can('manage_options')) {
+                    wp_die(__('You do not have permission to access this page.'));
+                }
+
                 $output = [];
                 check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
 
