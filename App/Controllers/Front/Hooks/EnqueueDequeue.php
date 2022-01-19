@@ -75,7 +75,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
                 $faVersion = ($allSettings['fontawesome_version'] ?? false);
                 $pluginUrlBase = ($this->getStaticPluginData())['targetDistURLBase'];
 
-                wp_enqueue_style('rd-fontawesome-allmin', $pluginUrlBase . '/css/all.min.css', [], $faVersion);
+                wp_enqueue_style('rd-fontawesome-allmin', $pluginUrlBase . '/css/all.min.css', [], strip_tags($faVersion));
             }
         }// enqueueAssets
 

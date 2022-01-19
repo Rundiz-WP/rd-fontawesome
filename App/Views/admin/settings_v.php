@@ -29,7 +29,7 @@
                         <tr>
                             <th scope="row"><?php esc_html_e('Installed Font Awesome version', 'rd-fontawesome'); ?></th>
                             <td>
-                                <p id="rd-fontawesome-currentversion"><?php echo ($settings['fontawesome_version'] ?? '-'); ?></p>
+                                <p id="rd-fontawesome-currentversion"><?php esc_html_e(($settings['fontawesome_version'] ?? '-')); ?></p>
                                 <button id="rd-fontawesome-install-latestversion-btn" class="button" type="button"><?php esc_html_e('Install latest version', 'rd-fontawesome'); ?></button>
                             </td>
                         </tr>
@@ -80,36 +80,36 @@
                     <tbody>
                         <tr>
                             <th><?php esc_html_e('WordPress', 'rd-fontawesome'); ?>:</th>
-                            <td><?php echo esc_html($serverinfo['wpVersion']); ?></td>
+                            <td><?php esc_html_e($serverinfo['wpVersion']); ?></td>
                         </tr>
                         <tr>
                             <th><?php esc_html_e('PHP', 'rd-fontawesome'); ?>:</th>
-                            <td><?php echo esc_html(PHP_VERSION); ?></td>
+                            <td><?php esc_html_e(PHP_VERSION); ?></td>
                         </tr>
                         <tr>
                             <th><?php esc_html_e('Execution timeout', 'rd-fontawesome'); ?>:</th>
-                            <td><?php echo esc_html($serverinfo['phpExecTimeout']); ?></td>
+                            <td><?php esc_html_e($serverinfo['phpExecTimeout']); ?></td>
                         </tr>
                         <tr>
                             <th><?php esc_html_e('Memory limit', 'rd-fontawesome'); ?>:</th>
-                            <td><?php echo esc_html($serverinfo['phpMemoryLimit']); ?></td>
+                            <td><?php esc_html_e($serverinfo['phpMemoryLimit']); ?></td>
                         </tr>
                         <tr>
                             <th><?php esc_html_e('WordPress Memory limit', 'rd-fontawesome'); ?>:</th>
-                            <td><?php echo esc_html($serverinfo['wpMemoryLimit']); ?>
+                            <td><?php esc_html_e($serverinfo['wpMemoryLimit']); ?>
                                 <p class="description"><code>WP_MAX_MEMORY_LIMIT</code></p>
                             </td>
                         </tr>
                         <tr>
                             <th><?php esc_html_e('Plugin version', 'rd-fontawesome'); ?>:</th>
-                            <td><?php echo esc_html(($serverinfo['pluginVersion'] ?? '?')); ?></td>
+                            <td><?php esc_html_e(($serverinfo['pluginVersion'] ?? '?')); ?></td>
                         </tr>
                         <tr>
                             <th><?php esc_html_e('Writable folders and files', 'rd-fontawesome'); ?>:</th>
                             <td><?php 
                             if (isset($serverinfo['writable'])) {
                                 foreach ($serverinfo['writable'] as $path => $pathResult) {
-                                    echo '<p>' . $path . '<br>';
+                                    echo '<p>' . esc_html($path) . '<br>';
                                     if ($pathResult === true) {
                                         esc_html_e('Yes', 'rd-fontawesome');
                                     } elseif ($pathResult === false) {

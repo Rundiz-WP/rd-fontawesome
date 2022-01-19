@@ -51,7 +51,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
             {
                 $output = [];
                 check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-                $downloadType = ($_REQUEST['download_type'] ?? '');
+                $downloadType = (strip_tags($_REQUEST['download_type']) ?? '');
 
                 $Settings = new \RdFontAwesome\App\Libraries\Settings();
                 $allSettings = $Settings->getAllSettings();
@@ -133,7 +133,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
             {
                 $output = [];
                 check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-                $downloadType = ($_REQUEST['download_type'] ?? '');
+                $downloadType = (strip_tags($_REQUEST['download_type']) ?? '');
 
                 $output = array_merge($output, $this->Url->retrieveLatestVersion($downloadType));
 
@@ -151,14 +151,10 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                 check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
 
                 $data = [];
-                foreach ($_POST as $name => $value) {
-                    $data[$name] = $value;
-                }
-                unset($name, $value);
-                unset($data['nonce'], $data['action']);
+                $data['download_type'] = (isset($_POST['download_type']) && !empty(trim($_POST['download_type'])) ? trim(strip_tags($_POST['download_type'])) : 'github');
+                $data['dequeue_css'] = trim(strip_tags($_POST['dequeue_css']));
+                $data['dequeue_js'] = trim(strip_tags($_POST['dequeue_js']));
                 $data['donot_enqueue'] = (isset($_POST['donot_enqueue']) && $_POST['donot_enqueue'] === '1' ? '1' : '0');
-                $data['dequeue_css'] = trim($data['dequeue_css']);
-                $data['dequeue_js'] = trim($data['dequeue_js']);
 
                 $Settings = new \RdFontAwesome\App\Libraries\Settings();
                 $Settings->saveSettings($data);
