@@ -51,7 +51,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
             {
                 $output = [];
                 check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-                $downloadType = (strip_tags($_REQUEST['download_type']) ?? '');
+                $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
 
                 $Settings = new \RdFontAwesome\App\Libraries\Settings();
                 $allSettings = $Settings->getAllSettings();
@@ -133,7 +133,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
             {
                 $output = [];
                 check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-                $downloadType = (strip_tags($_REQUEST['download_type']) ?? '');
+                $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
 
                 $output = array_merge($output, $this->Url->retrieveLatestVersion($downloadType));
 
