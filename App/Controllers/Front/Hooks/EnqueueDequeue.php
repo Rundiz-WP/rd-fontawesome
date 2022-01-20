@@ -73,9 +73,12 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
 
             if (!isset($allSettings['donot_enqueue']) || $allSettings['donot_enqueue'] !== '1') {
                 $faVersion = ($allSettings['fontawesome_version'] ?? false);
+                if (false !== $faVersion) {
+                    $faVersion = strip_tags($faVersion);
+                }
                 $pluginUrlBase = ($this->getStaticPluginData())['targetDistURLBase'];
 
-                wp_enqueue_style('rd-fontawesome-allmin', $pluginUrlBase . '/css/all.min.css', [], strip_tags($faVersion));
+                wp_enqueue_style('rd-fontawesome-allmin', $pluginUrlBase . '/css/all.min.css', [], $faVersion);
             }
         }// enqueueAssets
 
