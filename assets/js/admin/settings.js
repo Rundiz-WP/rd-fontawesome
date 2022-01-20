@@ -13,6 +13,7 @@ class RdFontAwesomeSettings {
     /**
      * Detect current active tab target ID.
      * 
+     * @private This method was called from `init()`.
      * @returns {null|string} Return `null` or current active tab target ID.
      */
     detectActiveTab() {
@@ -36,6 +37,28 @@ class RdFontAwesomeSettings {
 
 
     /**
+     * Generate alert box.
+     * 
+     * @private
+     * @param {mixed} messages The message as string or array.
+     * @param {string} noticeType Accepted `success`, `error`. 
+     * @returns {undefined}
+     */
+    generateAlertBox(messages, noticeType = 'success') {
+        let alertBox = '<div class="notice notice-' + noticeType + ' is-dismissible">';
+        if (typeof(messages) === 'string') {
+            alertBox += '<p>' + messages + '</p>';
+        } else {
+            for (let i = 0; i < messages.length; i++) {
+                alertBox += '<p>' + messages[i] + '</p>';
+            }
+        }
+        alertBox += '<button class="notice-dismiss" type="button" onclick="return jQuery(this).parent().remove();"><span class="screen-reader-text">' + RdFontAwesomeSettingsObject.txtDismissNotice + '</span></button>';
+        alertBox += '</div>';
+    }// generateAlertBox
+
+
+    /**
      * Initialize the class.
      * 
      * @returns {undefined}
@@ -56,6 +79,7 @@ class RdFontAwesomeSettings {
     /**
      * Download and install latest version.
      * 
+     * @private This method was called from `init()`.
      * @returns {undefined}
      */
     installLatestVersion() {
@@ -98,12 +122,7 @@ class RdFontAwesomeSettings {
                         }
 
                         if (data && data.formResultMessage) {
-                            let alertBox = '<div class="notice notice-success is-dismissible">';
-                            for (let i = 0; i < data.formResultMessage.length; i++) {
-                                alertBox += '<p>' + data.formResultMessage[i] + '</p>';
-                            }
-                            alertBox += '<button class="notice-dismiss" type="button" onclick="return jQuery(this).parent().remove();"><span class="screen-reader-text">' + RdFontAwesomeSettingsObject.txtDismissNotice + '</span></button>';
-                            alertBox += '</div>';
+                            let alertBox = thisClass.getAlertBox(data.formResultMessage);
                             formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
@@ -116,12 +135,7 @@ class RdFontAwesomeSettings {
                         installedVersionElement.innerHTML = '-';
 
                         if (response && response.formResultMessage) {
-                            let alertBox = '<div class="notice notice-error is-dismissible">';
-                            for (let i = 0; i < response.formResultMessage.length; i++) {
-                                alertBox += '<p>' + response.formResultMessage[i] + '</p>';
-                            }
-                            alertBox += '<button class="notice-dismiss" type="button" onclick="return jQuery(this).parent().remove();"><span class="screen-reader-text">' + RdFontAwesomeSettingsObject.txtDismissNotice + '</span></button>';
-                            alertBox += '</div>';
+                            let alertBox = thisClass.getAlertBox(response.formResultMessage, 'error');
                             formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
@@ -137,6 +151,7 @@ class RdFontAwesomeSettings {
     /**
      * Listen click on tab nav and set active tab content.
      * 
+     * @private This method was called from `init()`.
      * @returns {undefined}
      */
     listenClickTab() {
@@ -161,6 +176,7 @@ class RdFontAwesomeSettings {
     /**
      * Listen form submit and make AJAX save.
      * 
+     * @private This method was called from `init()`.
      * @returns {undefined}
      */
     listenFormSubmit() {
@@ -188,12 +204,7 @@ class RdFontAwesomeSettings {
                     })
                     .done((data, textStatus, jqXHR) => {
                         if (data && data.formResultMessage) {
-                            let alertBox = '<div class="notice notice-success is-dismissible">';
-                            for (let i = 0; i < data.formResultMessage.length; i++) {
-                                alertBox += '<p>' + data.formResultMessage[i] + '</p>';
-                            }
-                            alertBox += '<button class="notice-dismiss" type="button" onclick="return jQuery(this).parent().remove();"><span class="screen-reader-text">' + RdFontAwesomeSettingsObject.txtDismissNotice + '</span></button>';
-                            alertBox += '</div>';
+                            let alertBox = thisClass.getAlertBox(data.formResultMessage);
                             formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
@@ -204,12 +215,7 @@ class RdFontAwesomeSettings {
                         }
 
                         if (response && response.formResultMessage) {
-                            let alertBox = '<div class="notice notice-error is-dismissible">';
-                            for (let i = 0; i < response.formResultMessage.length; i++) {
-                                alertBox += '<p>' + response.formResultMessage[i] + '</p>';
-                            }
-                            alertBox += '<button class="notice-dismiss" type="button" onclick="return jQuery(this).parent().remove();"><span class="screen-reader-text">' + RdFontAwesomeSettingsObject.txtDismissNotice + '</span></button>';
-                            alertBox += '</div>';
+                            let alertBox = thisClass.getAlertBox(response.formResultMessage, 'error');
                             formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
@@ -227,6 +233,7 @@ class RdFontAwesomeSettings {
     /**
      * Retrieve latest version.
      * 
+     * @private This method was called from `init()`.
      * @returns {undefined}
      */
     retrieveLatestVersion() {
@@ -276,6 +283,7 @@ class RdFontAwesomeSettings {
     /**
      * Set active to selected tab content.
      * 
+     * @private This method was called from `init()`, `listenClickTab()`.
      * @param {string} selector
      * @returns {undefined}
      */
@@ -300,6 +308,7 @@ class RdFontAwesomeSettings {
     /**
      * Set active tab nav.
      * 
+     * @private This method was called from `listenClickTab()`.
      * @param {object} HTMLElement
      * @returns {undefined}
      */
