@@ -184,6 +184,7 @@ class RdFontAwesomeSettings {
         let thisClass = this;
         let thisForm = document.getElementById('rd-fontawesome-settings-form');
         let formResultPlaceholder = document.getElementById('rd-fontawesome-form-result-placeholder');
+        let submitResultMessagePlaceholder = document.getElementById('rd-fontawesome-settings-submit-resultmessage');
         let rdfontawesomeLoading = false;
 
         if (thisForm) {
@@ -197,6 +198,7 @@ class RdFontAwesomeSettings {
                 if (false === rdfontawesomeLoading) {
                     rdfontawesomeLoading = true;
                     formResultPlaceholder.innerHTML = '';
+                    submitResultMessagePlaceholder.innerHTML = '';
 
                     jQuery.ajax({
                         'url': ajaxurl,
@@ -204,9 +206,25 @@ class RdFontAwesomeSettings {
                         'data': new URLSearchParams(formData).toString()
                     })
                     .done((data, textStatus, jqXHR) => {
-                        if (data && data.formResultMessage) {
-                            let alertBox = thisClass.generateAlertBox(data.formResultMessage, data.formResult);
-                            formResultPlaceholder.innerHTML = alertBox;
+                        if (data) {
+                            if (data.formResultMessage) {
+                                let alertBox = thisClass.generateAlertBox(data.formResultMessage, data.formResult);
+                                formResultPlaceholder.innerHTML = alertBox;
+                                if (data.pendingScan === true) {
+                                    let submitResultMsg = '';
+                                    for (let i = 0; i < data.formResultMessage.length; i++) {
+                                        submitResultMsg += data.formResultMessage[i] + '<br>';
+                                    }
+                                    submitResultMessagePlaceholder.innerHTML = submitResultMsg;
+                                }
+                            }
+
+                            if (data.form && data.form.dequeue_css && data.form.dequeue_css) {
+                                // if there are changed result of dequeue after scanned.
+                                // update the value in form.
+                                document.getElementById('rd-fontawesome-dequeue-css').value = data.form.dequeue_css
+                                document.getElementById('rd-fontawesome-dequeue-js').value = data.form.dequeue_js
+                            }
                         }
                     })
                     .fail((jqXHR, textStatus, errorThrown) => {

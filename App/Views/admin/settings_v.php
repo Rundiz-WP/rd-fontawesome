@@ -72,7 +72,8 @@
                     </tbody>
                 </table><!--.form-table-->
                 <p class="submit">
-                    <button id="rd-fontawesome-settings-submit" class="button button-primary" type="submit"><?php esc_html_e('Save Changes'); ?></button>
+                    <button id="rd-fontawesome-settings-submit" class="button button-primary" type="submit"><?php esc_html_e('Save Changes'); ?></button> 
+                    <span id="rd-fontawesome-settings-submit-resultmessage"></span>
                 </p>
             </div><!--#rd-fontawesome-tab-settings-->
             <div id="rd-fontawesome-tab-svinfo">
