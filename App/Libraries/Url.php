@@ -92,7 +92,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                 return new \WP_Error(
                     'RDFA_CANTCREATEDIR', 
                     /* translators: %1$s the plugin directory path. */
-                    sprintf(__('Unable to create directory at %1$s', 'rd-fontawesome'), plugin_dir_path(RDFONTAWESOME_FILE))
+                    sprintf(__('Unable to create directory at %1$s.', 'rd-fontawesome'), plugin_dir_path(RDFONTAWESOME_FILE))
                 );
             }
             unset($result);

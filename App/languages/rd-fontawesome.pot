@@ -2,14 +2,14 @@
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Rundiz Font Awesome 1.0.0a20220119\n"
+"Project-Id-Version: Rundiz Font Awesome 0.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/rd-fontawesome\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-01-19T00:29:57+07:00\n"
+"POT-Creation-Date: 2022-01-20T17:36:12+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: rd-fontawesome\n"
@@ -47,20 +47,53 @@ msgstr ""
 msgid "Rundiz Font Awesome settings"
 msgstr ""
 
-#: App/Controllers/Admin/Settings.php:139
+#: App/Controllers/Admin/Settings.php:140
 msgid "Invalid request."
+msgstr ""
+
+#: App/Controllers/Admin/SettingsAjax.php:64
+msgid "Unable to retrieve latest version from GitHub."
 msgstr ""
 
 #: App/Controllers/Admin/SettingsAjax.php:105
 msgid "Success! You have installed latest version of Font Awesome."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:119
+#: App/Controllers/Admin/SettingsAjax.php:120
 msgid "Success! Your Font Awesome is already latest version."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:169
+#: App/Controllers/Admin/SettingsAjax.php:128
+msgid "An unknown error occur!"
+msgstr ""
+
+#. translators: %1$s open link, %2$s close link.
+#: App/Controllers/Admin/SettingsAjax.php:227
+msgid "Save is pending. Please open your %1$shome%2$s to let scaning process work for scan dequeue files and come back to save again."
+msgstr ""
+
+#: App/Controllers/Admin/SettingsAjax.php:257
+#: App/Controllers/Admin/SettingsAjax.php:306
 msgid "Saved successfully."
+msgstr ""
+
+#. translators: %1$s the scanned result.
+#: App/Controllers/Admin/SettingsAjax.php:260
+msgid "Some of your handles were removed due to failed to verify it's Font Awesome. (%1$s)"
+msgstr ""
+
+#. translators: %1$s the result of scanned CSS.
+#: App/Controllers/Admin/SettingsAjax.php:262
+msgid "CSS: %1$s"
+msgstr ""
+
+#. translators: %1$s the result of scanned JS.
+#: App/Controllers/Admin/SettingsAjax.php:264
+msgid "JS: %1$s"
+msgstr ""
+
+#: App/Controllers/Front/Hooks/PrintScriptsScanDequeue.php:74
+msgid "Scan completed. Please close this window, go back to settings page and click on save button again."
 msgstr ""
 
 #. translators: %1$s the downloaded file path.
@@ -70,10 +103,10 @@ msgstr ""
 
 #. translators: %1$s the plugin directory path.
 #: App/Libraries/Url.php:95
-msgid "Unable to create directory at %1$s"
+msgid "Unable to create directory at %1$s."
 msgstr ""
 
-#: App/Libraries/Url.php:180
+#: App/Libraries/Url.php:181
 msgid "Invalid Font Awesome files."
 msgstr ""
 
@@ -147,42 +180,42 @@ msgstr ""
 msgid "The assets for this plugin such as CSS, fonts won't be loaded."
 msgstr ""
 
-#: App/Views/admin/settings_v.php:82
+#: App/Views/admin/settings_v.php:83
 msgid "WordPress"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:86
+#: App/Views/admin/settings_v.php:87
 msgid "PHP"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:90
+#: App/Views/admin/settings_v.php:91
 msgid "Execution timeout"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:94
+#: App/Views/admin/settings_v.php:95
 msgid "Memory limit"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:98
+#: App/Views/admin/settings_v.php:99
 msgid "WordPress Memory limit"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:104
+#: App/Views/admin/settings_v.php:105
 msgid "Plugin version"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:108
+#: App/Views/admin/settings_v.php:109
 msgid "Writable folders and files"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:114
+#: App/Views/admin/settings_v.php:115
 msgid "Yes"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:116
+#: App/Views/admin/settings_v.php:117
 msgid "No"
 msgstr ""
 
-#: App/Views/admin/settings_v.php:118
+#: App/Views/admin/settings_v.php:119
 msgid "Not exists"
 msgstr ""
