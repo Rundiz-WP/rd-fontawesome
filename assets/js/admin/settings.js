@@ -55,6 +55,7 @@ class RdFontAwesomeSettings {
         }
         alertBox += '<button class="notice-dismiss" type="button" onclick="return jQuery(this).parent().remove();"><span class="screen-reader-text">' + RdFontAwesomeSettingsObject.txtDismissNotice + '</span></button>';
         alertBox += '</div>';
+        return alertBox;
     }// generateAlertBox
 
 
