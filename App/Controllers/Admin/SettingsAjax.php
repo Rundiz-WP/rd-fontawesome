@@ -12,196 +12,199 @@ namespace RdFontAwesome\App\Controllers\Admin;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
-        class SettingsAjax extends \RdFontAwesome\App\Controllers\BaseController
+    class SettingsAjax extends \RdFontAwesome\App\Controllers\BaseController
+    {
+
+
+        /**
+         * @var \\RdFontAwesome\\App\\Libraries\\Url
+         */
+        protected $Url;
+
+
+        /**
+         * Class constructor.
+         */
+        public function __construct()
         {
+            $this->Url = new \RdFontAwesome\App\Libraries\Url($this->getStaticPluginData());
+        }// __construct
 
 
-            /**
-             * @var \\RdFontAwesome\\App\\Libraries\\Url
-             */
-            protected $Url;
+        /**
+         * Download and install latest Font Awesome version.
+         */
+        public function installLatestFAVersion()
+        {
+            // check permission.
+            if (!current_user_can('manage_options')) {
+                wp_die(__('You do not have permission to access this page.'));
+                exit();
+            }
 
+            $output = [];
+            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+            // the download_type is for programmatic use. it is already checked before use. so, it is no need to check value here.
+            $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
 
-            /**
-             * Class constructor.
-             */
-            public function __construct()
-            {
-                $this->Url = new \RdFontAwesome\App\Libraries\Url($this->getStaticPluginData());
-            }// __construct
+            $Settings = new \RdFontAwesome\App\Libraries\Settings();
+            $allSettings = $Settings->getAllSettings();
 
+            $latestInfo = $this->Url->retrieveLatestVersion($downloadType);
+            $downloadLink = ($latestInfo['downloadLink'] ?? null);
+            $latestVersion = (isset($latestInfo['tagVersion']) ? strip_tags($latestInfo['tagVersion']) : null);
+            unset($latestInfo);
 
-            /**
-             * Download and install latest Font Awesome version.
-             */
-            public function installLatestFAVersion()
-            {
-                // check permission.
-                if (!current_user_can('manage_options')) {
-                    wp_die(__('You do not have permission to access this page.'));
-                    exit();
-                }
-
-                $output = [];
-                check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-                $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
-
-                $Settings = new \RdFontAwesome\App\Libraries\Settings();
-                $allSettings = $Settings->getAllSettings();
-
-                $latestInfo = $this->Url->retrieveLatestVersion($downloadType);
-                $downloadLink = ($latestInfo['downloadLink'] ?? null);
-                $latestVersion = (isset($latestInfo['tagVersion']) ? strip_tags($latestInfo['tagVersion']) : null);
-                unset($latestInfo);
-
-                $statusCode = 200;
-                if (is_null($downloadLink) || is_null($latestVersion)) {
-                    // if download link is not found or latest version info is not found.
-                    $statusCode = 404;
-                    $output['formResult'] = 'error';
-                    $output['formResultMessage'] = [
-                        __('Unable to retrieve latest version from GitHub.', 'rd-fontawesome'),
-                    ];
-                } elseif (is_string($downloadLink) && !empty($downloadLink) && is_string($latestVersion)) {
-                    // if found download link and latest version info.
-                    if (
-                        empty($allSettings) || 
-                        (
-                            isset($allSettings['fontawesome_version']) &&
-                            version_compare($allSettings['fontawesome_version'], $latestVersion, '<')
-                        ) ||
-                        !is_dir(($this->getStaticPluginData())['targetDistDir'])
-                    ) {
-                        // if never installed before OR older that latest released.
-                        $dlResult = $this->Url->downloadFile($downloadType, $downloadLink);
-                        if (is_wp_error($dlResult)) {
-                            $statusCode = 500;
-                            $output['formResult'] = 'error';
-                            $output['formResultMessage'] = [];
-                            foreach ($dlResult->get_error_messages() as $eMessage) {
-                                $output['formResultMessage'][] = $eMessage;
-                            }// endforeach;
-                            unset($eMessage);
-                        } else {
-                            $output['downloadResult'] = $dlResult;
-                            if (false === $dlResult) {
-                                // if there are some errors but can continue.
-                                $output['tempDir'] = $this->Url->tempDir;
-                                $output['tempDirExists'] = (is_string($this->Url->tempDir) ? is_dir($this->Url->tempDir) : false);
-                            }
-                        }
-
-                        if (!is_wp_error($dlResult)) {
-                            $Settings->saveSettings([
-                                'download_type' => $downloadType,
-                                'fontawesome_version' => $latestVersion,
-                            ]);
-                            $output['allSettings'] = $Settings->getAllSettings();
-                            $output['downloadLink'] = $downloadLink;
-                            $output['tagVersion'] = ($output['allSettings']['fontawesome_version'] ?? null);
-                            $output['formResult'] = 'success';
-                            $output['formResultMessage'] = [
-                                __('Success! You have installed latest version of Font Awesome.', 'rd-fontawesome'),
-                            ];
-                        }
-                        unset($dlResult);
+            $statusCode = 200;
+            if (is_null($downloadLink) || is_null($latestVersion)) {
+                // if download link is not found or latest version info is not found.
+                $statusCode = 404;
+                $output['formResult'] = 'error';
+                $output['formResultMessage'] = [
+                    __('Unable to retrieve latest version from GitHub.', 'rd-fontawesome'),
+                ];
+            } elseif (is_string($downloadLink) && !empty($downloadLink) && is_string($latestVersion)) {
+                // if found download link and latest version info.
+                if (
+                    empty($allSettings) || 
+                    (
+                        isset($allSettings['fontawesome_version']) &&
+                        version_compare($allSettings['fontawesome_version'], $latestVersion, '<')
+                    ) ||
+                    !is_dir(($this->getStaticPluginData())['targetDistDir'])
+                ) {
+                    // if never installed before OR older that latest released.
+                    $dlResult = $this->Url->downloadFile($downloadType, $downloadLink);
+                    if (is_wp_error($dlResult)) {
+                        $statusCode = 500;
+                        $output['formResult'] = 'error';
+                        $output['formResultMessage'] = [];
+                        foreach ($dlResult->get_error_messages() as $eMessage) {
+                            $output['formResultMessage'][] = $eMessage;
+                        }// endforeach;
+                        unset($eMessage);
                     } else {
-                        // if already installed and is using latest version.
-                        $output['skippedDownload'] = [
-                            'result' => true,
-                            'latestVersion' => $latestVersion,
-                            'currentVersion' => ($allSettings['fontawesome_version'] ?? null),
-                        ];
+                        $output['downloadResult'] = $dlResult;
+                        if (false === $dlResult) {
+                            // if there are some errors but can continue.
+                            $output['tempDir'] = $this->Url->tempDir;
+                            $output['tempDirExists'] = (is_string($this->Url->tempDir) ? is_dir($this->Url->tempDir) : false);
+                        }
+                    }
+
+                    if (!is_wp_error($dlResult)) {
+                        $Settings->saveSettings([
+                            'download_type' => $downloadType,
+                            'fontawesome_version' => $latestVersion,
+                        ]);
+                        $output['allSettings'] = $Settings->getAllSettings();
                         $output['downloadLink'] = $downloadLink;
-                        $output['tagVersion'] = ($allSettings['fontawesome_version'] ?? null);
+                        $output['tagVersion'] = ($output['allSettings']['fontawesome_version'] ?? null);
                         $output['formResult'] = 'success';
                         $output['formResultMessage'] = [
-                            __('Success! Your Font Awesome is already latest version.', 'rd-fontawesome'),
+                            __('Success! You have installed latest version of Font Awesome.', 'rd-fontawesome'),
                         ];
                     }
+                    unset($dlResult);
                 } else {
-                    // if unknown errors.
-                    $statusCode = 500;
-                    $output['formResult'] = 'error';
-                    $output['formResultMessage'] = [
-                        __('An unknown error occur!', 'rd-fontawesome'),
+                    // if already installed and is using latest version.
+                    $output['skippedDownload'] = [
+                        'result' => true,
+                        'latestVersion' => $latestVersion,
+                        'currentVersion' => ($allSettings['fontawesome_version'] ?? null),
                     ];
                     $output['downloadLink'] = $downloadLink;
-                    $output['latestVersion'] = $latestVersion;
+                    $output['tagVersion'] = ($allSettings['fontawesome_version'] ?? null);
+                    $output['formResult'] = 'success';
+                    $output['formResultMessage'] = [
+                        __('Success! Your Font Awesome is already latest version.', 'rd-fontawesome'),
+                    ];
                 }
-
-                unset($allSettings, $downloadType, $downloadLink, $latestVersion, $Settings);
-                wp_send_json($output, $statusCode);
-            }// installLatestFAVersion
-
-
-            /**
-             * {@inheritDoc}
-             */
-            public function registerHooks()
-            {
-                if (is_admin()) {
-                    add_action('wp_ajax_rdfontawesome_retrievelatestversion', [$this, 'retrieveLatestFAVersion']);
-                    add_action('wp_ajax_rdfontawesome_installlatestversion', [$this, 'installLatestFAVersion']);
-                    add_action('wp_ajax_rdfontawesome_savesettings', [$this, 'saveSettings']);
-                }
-            }// registerHooks
-
-
-            /**
-             * Retrieve latest Font Awesome version.
-             */
-            public function retrieveLatestFAVersion()
-            {
-                // check permission.
-                if (!current_user_can('manage_options')) {
-                    wp_die(__('You do not have permission to access this page.'));
-                    exit();
-                }
-
-                $output = [];
-                check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-                $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
-
-                $output = array_merge($output, $this->Url->retrieveLatestVersion($downloadType));
-
-                unset($downloadType);
-                wp_send_json($output);
-            }// retrieveLatestFAVersion
-
-
-            /**
-             * Save settings.
-             */
-            public function saveSettings()
-            {
-                // check permission.
-                if (!current_user_can('manage_options')) {
-                    wp_die(__('You do not have permission to access this page.'));
-                    exit();
-                }
-
-                $output = [];
-                check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-
-                $data = [];
-                $data['download_type'] = (isset($_POST['download_type']) && !empty(trim($_POST['download_type'])) ? trim(strip_tags($_POST['download_type'])) : 'github');
-                $data['dequeue_css'] = trim(strip_tags($_POST['dequeue_css']));
-                $data['dequeue_js'] = trim(strip_tags($_POST['dequeue_js']));
-                $data['donot_enqueue'] = (isset($_POST['donot_enqueue']) && $_POST['donot_enqueue'] === '1' ? '1' : '0');
-
-                $Settings = new \RdFontAwesome\App\Libraries\Settings();
-                $Settings->saveSettings($data);
-                unset($data, $Settings);
-
-                $output['formResult'] = 'success';
+            } else {
+                // if unknown errors.
+                $statusCode = 500;
+                $output['formResult'] = 'error';
                 $output['formResultMessage'] = [
-                    __('Saved successfully.', 'rd-fontawesome'),
+                    __('An unknown error occur!', 'rd-fontawesome'),
                 ];
+                $output['downloadLink'] = $downloadLink;
+                $output['latestVersion'] = $latestVersion;
+            }
 
-                wp_send_json($output);
-            }// saveSettings
+            unset($allSettings, $downloadType, $downloadLink, $latestVersion, $Settings);
+            wp_send_json($output, $statusCode);
+        }// installLatestFAVersion
 
 
-        }
+        /**
+         * {@inheritDoc}
+         */
+        public function registerHooks()
+        {
+            if (is_admin()) {
+                add_action('wp_ajax_rdfontawesome_retrievelatestversion', [$this, 'retrieveLatestFAVersion']);
+                add_action('wp_ajax_rdfontawesome_installlatestversion', [$this, 'installLatestFAVersion']);
+                add_action('wp_ajax_rdfontawesome_savesettings', [$this, 'saveSettings']);
+            }
+        }// registerHooks
+
+
+        /**
+         * Retrieve latest Font Awesome version.
+         */
+        public function retrieveLatestFAVersion()
+        {
+            // check permission.
+            if (!current_user_can('manage_options')) {
+                wp_die(__('You do not have permission to access this page.'));
+                exit();
+            }
+
+            $output = [];
+            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+            // the download_type is for programmatic use. it is already checked before use. so, it is no need to check value here.
+            $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
+
+            $output = array_merge($output, $this->Url->retrieveLatestVersion($downloadType));
+
+            unset($downloadType);
+            wp_send_json($output);
+        }// retrieveLatestFAVersion
+
+
+        /**
+         * Save settings.
+         */
+        public function saveSettings()
+        {
+            // check permission.
+            if (!current_user_can('manage_options')) {
+                wp_die(__('You do not have permission to access this page.'));
+                exit();
+            }
+
+            $output = [];
+            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+
+            $data = [];
+            // the download_type is for programmatic use. it is already checked before use. so, it is no need to check value here.
+            $data['download_type'] = (isset($_POST['download_type']) && !empty(trim($_POST['download_type'])) ? trim(strip_tags($_POST['download_type'])) : 'github');
+            $data['dequeue_css'] = trim(strip_tags($_POST['dequeue_css']));
+            $data['dequeue_js'] = trim(strip_tags($_POST['dequeue_js']));
+            $data['donot_enqueue'] = (isset($_POST['donot_enqueue']) && $_POST['donot_enqueue'] === '1' ? '1' : '0');
+
+            $Settings = new \RdFontAwesome\App\Libraries\Settings();
+            $Settings->saveSettings($data);
+            unset($data, $Settings);
+
+            $output['formResult'] = 'success';
+            $output['formResultMessage'] = [
+                __('Saved successfully.', 'rd-fontawesome'),
+            ];
+
+            wp_send_json($output);
+        }// saveSettings
+
+
+    }// SettingsAjax
 }

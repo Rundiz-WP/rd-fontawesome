@@ -104,84 +104,85 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                 return $result;
             }
 
-        // validate Font Awesome files. -----
-        $filesInNewtemp = $wp_filesystem->dirlist($this->tempDir);
-        $validFontAwesomeFiles = false;
-        $newVersionDir = null;
-        $validFiles = [
-            'css/all.min.css',
-            'js/all.min.js',
-            'sprites',
-            'webfonts',
-        ];
-        if (is_array($filesInNewtemp)) {
-            $newVersionDir = array_key_first($filesInNewtemp);// the extracted will be FontAwesome-x.x.x/css This will be get FontAwesome-x.x.x folder name.
-        }
-        unset($filesInNewtemp);
-
-        foreach ($validFiles as $validFile) {
-            if (file_exists($this->tempDir . DIRECTORY_SEPARATOR . $newVersionDir . DIRECTORY_SEPARATOR . $validFile)) {
-                $validFontAwesomeFiles = true;
-            } else {
-                $validFontAwesomeFiles = false;
-                break;
-            }
-        }// endforeach;
-        unset($validFile, $validFiles);
-        // end validate Font Awesome files. -----
-
-        // move valid files to distribute folder (vendor/fontawesome).
-        if (true === $validFontAwesomeFiles) {
-            // if valid Font Awesome files.
-            // prepare distributed folder
-            $wp_filesystem->delete($targetDistributeDir, true);
-            wp_mkdir_p($targetDistributeDir);
-            // move target folders and files.
-            $moveFiles = [
-                'css',
-                'js',
+            // validate Font Awesome files. -----
+            $filesInNewtemp = $wp_filesystem->dirlist($this->tempDir);
+            $validFontAwesomeFiles = false;
+            $newVersionDir = null;
+            $validFiles = [
+                'css/all.min.css',
+                'js/all.min.js',
                 'sprites',
-                'svgs',
                 'webfonts',
-                'LICENSE.txt',
             ];
-            if ('githubapi' === $downloadType) {
-                $moveFiles[] = 'attribution.js';
+            if (is_array($filesInNewtemp)) {
+                $newVersionDir = array_key_first($filesInNewtemp);// the extracted will be FontAwesome-x.x.x/css This will be get FontAwesome-x.x.x folder name.
             }
-            $results = [];
-            $movedSuccess = [];
-            foreach ($moveFiles as $moveFile) {
-                $result = rename($this->tempDir . '/' . $newVersionDir . '/' . $moveFile, $targetDistributeDir . '/' . $moveFile);
-                $results[$this->tempDir . '/' . $newVersionDir . '/' . $moveFile] = $result;
-                if (true === $result) {
-                    $movedSuccess[] = $moveFile;
+            unset($filesInNewtemp);
+
+            foreach ($validFiles as $validFile) {
+                if (file_exists($this->tempDir . DIRECTORY_SEPARATOR . $newVersionDir . DIRECTORY_SEPARATOR . $validFile)) {
+                    $validFontAwesomeFiles = true;
+                } else {
+                    $validFontAwesomeFiles = false;
+                    break;
                 }
-                unset($result);
             }// endforeach;
-            unset($moveFile);
+            unset($validFile, $validFiles);
+            // end validate Font Awesome files. -----
 
-            if (count($movedSuccess) === count($moveFiles)) {
-                // if all files and folders moved successfully.
-                $return = true;
+            // move valid files to distribute folder (vendor/fontawesome). -----
+            if (true === $validFontAwesomeFiles) {
+                // if valid Font Awesome files.
+                // prepare distributed folder
+                $wp_filesystem->delete($targetDistributeDir, true);
+                wp_mkdir_p($targetDistributeDir);
+                // move target folders and files.
+                $moveFiles = [
+                    'css',
+                    'js',
+                    'sprites',
+                    'svgs',
+                    'webfonts',
+                    'LICENSE.txt',
+                ];
+                if ('githubapi' === $downloadType) {
+                    $moveFiles[] = 'attribution.js';
+                }
+                $results = [];
+                $movedSuccess = [];
+                foreach ($moveFiles as $moveFile) {
+                    $result = rename($this->tempDir . '/' . $newVersionDir . '/' . $moveFile, $targetDistributeDir . '/' . $moveFile);
+                    $results[$this->tempDir . '/' . $newVersionDir . '/' . $moveFile] = $result;
+                    if (true === $result) {
+                        $movedSuccess[] = $moveFile;
+                    }
+                    unset($result);
+                }// endforeach;
+                unset($moveFile);
 
-                // delete new temp folder. (if not all success, keep it to showing what left behind.)
-                $wp_filesystem->delete($this->tempDir, true);
+                if (count($movedSuccess) === count($moveFiles)) {
+                    // if all files and folders moved successfully.
+                    $return = true;
+
+                    // delete new temp folder. (if not all success, keep it to showing what left behind.)
+                    $wp_filesystem->delete($this->tempDir, true);
+                } else {
+                    $return = false;
+                    // it's PHP error, show in the log, no need to translate.
+                    trigger_error(sprintf('Unable to move some files (%s)', var_export($results, true)), E_USER_WARNING);
+                }
+                unset($moveFiles, $movedSuccess, $results);
+
+                return $return;
             } else {
-                $return = false;
-                // it's PHP error, show in the log, no need to translate.
-                trigger_error(sprintf('Unable to move some files (%s)', var_export($results, true)), E_USER_WARNING);
-            }
-            unset($moveFiles, $movedSuccess, $results);
-
-            return $return;
-        } else {
-            $wp_filesystem->delete($this->tempDir, true);
-            return new \WP_Error(
-                'RDFA_INVALID_FAFILES',
-                __('Invalid Font Awesome files.', 'rd-fontawesome')
-            );
-        }
-        unset($newVersionDir, $validFontAwesomeFiles);
+                $wp_filesystem->delete($this->tempDir, true);
+                return new \WP_Error(
+                    'RDFA_INVALID_FAFILES',
+                    __('Invalid Font Awesome files.', 'rd-fontawesome')
+                );
+            }// if valid Font Awesome files.
+            unset($newVersionDir, $validFontAwesomeFiles);
+            // end move valid files to distribute folder (vendor/fontawesome). -----
         }// downloadFile
 
 
