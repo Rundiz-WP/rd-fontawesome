@@ -163,7 +163,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
         protected function scanContents(string $contents): bool
         {
             $matches = [];
-            $pattern = implode('|', static::SEARCH_FA_KEYWORDS);
+            $pattern = preg_quote(implode('|', static::SEARCH_FA_KEYWORDS));
             $result = preg_match('/' . $pattern . '/', $contents, $matches);
             if ($result > 0) {
                 return true;
