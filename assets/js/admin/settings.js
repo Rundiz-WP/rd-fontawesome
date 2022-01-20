@@ -122,7 +122,7 @@ class RdFontAwesomeSettings {
                         }
 
                         if (data && data.formResultMessage) {
-                            let alertBox = thisClass.getAlertBox(data.formResultMessage);
+                            let alertBox = thisClass.generateAlertBox(data.formResultMessage);
                             formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
@@ -135,7 +135,7 @@ class RdFontAwesomeSettings {
                         installedVersionElement.innerHTML = '-';
 
                         if (response && response.formResultMessage) {
-                            let alertBox = thisClass.getAlertBox(response.formResultMessage, 'error');
+                            let alertBox = thisClass.generateAlertBox(response.formResultMessage, 'error');
                             formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
@@ -204,7 +204,7 @@ class RdFontAwesomeSettings {
                     })
                     .done((data, textStatus, jqXHR) => {
                         if (data && data.formResultMessage) {
-                            let alertBox = thisClass.getAlertBox(data.formResultMessage);
+                            let alertBox = thisClass.generateAlertBox(data.formResultMessage, data.formResult);
                             formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
@@ -215,7 +215,7 @@ class RdFontAwesomeSettings {
                         }
 
                         if (response && response.formResultMessage) {
-                            let alertBox = thisClass.getAlertBox(response.formResultMessage, 'error');
+                            let alertBox = thisClass.generateAlertBox(response.formResultMessage, 'error');
                             formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
