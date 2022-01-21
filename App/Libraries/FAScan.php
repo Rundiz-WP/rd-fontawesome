@@ -19,6 +19,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
         /**
          * @var array Search Font Awesome content keywords.
          *      Don't use too generic keywords such as `fa` (will be matched widefat), fal, etc.
+         *      Must all lower case.
          */
         const SEARCH_FA_KEYWORDS = ['fa-', 'fontawesome', 'font awesome', 'font+awesome', 'font%20awesome', 'font-awesome', 'font_awesome'];
 
@@ -79,7 +80,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
 
                         // in case that checked with the content but not found.
                         // check with the handle name. -----
-                        if (in_array($assetFile, static::SEARCH_FA_KEYWORDS)) {
+                        if (in_array(strtolower($assetFile), static::SEARCH_FA_KEYWORDS)) {
                             // if found in handle name.
                             $found = true;
                             unset($assetFile);
@@ -201,7 +202,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
         {
             $matches = [];
             $pattern = implode('|', array_map('preg_quote', static::SEARCH_FA_KEYWORDS));
-            $result = preg_match('/' . $pattern . '/', $contents, $matches);
+            $result = preg_match('/' . $pattern . '/i', $contents, $matches);
             if ($result > 0) {
                 return true;
             }
