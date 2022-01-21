@@ -34,9 +34,6 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
                 'rd-fontawesome-settings',
                 'RdFontAwesomeSettingsObject', 
                 [
-                    'GitHubRepoName' => ($this->getStaticPluginData())['reponame'],
-                    'GitHubAPILatestReleaseURL' => ($this->getStaticPluginData())['repoURLs']['latestAPIURL'],
-                    'GitHubLatestReleaseURL' => ($this->getStaticPluginData())['repoURLs']['latestURL'],
                     'nonce' => wp_create_nonce('rdfontawesome_ajaxnonce'),
                     'txtDismissNotice' => __('Dismiss this notice.', 'rd-fontawesome'),
                     'txtLoading' => __('Loading', 'rd-fontawesome'),
@@ -75,12 +72,10 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
             $pluginData = get_plugin_data(RDFONTAWESOME_FILE);
             $output['pluginVersion'] = ($pluginData['Version'] ?? false);
             unset($pluginData);
-
             // paths writable.
             $pathsToCheck = [
-                dirname(RDFONTAWESOME_FILE),
-                dirname(RDFONTAWESOME_FILE) . '/assets/vendor',
-                dirname(RDFONTAWESOME_FILE) . '/settings.json',
+                WP_CONTENT_DIR . '/uploads',
+                WP_CONTENT_DIR . '/uploads/rd-fontawesome',
             ];
             $output['writable'] = [];
             foreach ($pathsToCheck as $path) {
@@ -127,11 +122,16 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
             }
 
             $output = [];
+            // list selectable of major versions for the form
+            $output['allMajorVersions'] = ($this->getStaticPluginData())['majorVersions'];
             // load settings from config json file.
             $output['settings'] = $this->getCurrentSettings();
-
             // server info data.
             $output['serverinfo'] = $this->getServerInfo();
+            // set default form value if not exists.
+            if (!isset($output['settings']['major_version'])) {
+                $output['settings']['major_version'] = ($this->getStaticPluginData())['defaultMajorVersion'];
+            }
 
             // if form submitted
             if (isset($_POST) && !empty($_POST)) {

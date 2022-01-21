@@ -11,6 +11,17 @@ class RdFontAwesomeSettings {
 
 
     /**
+     * Class constructor.
+     * 
+     * @returns {RdFontAwesomeSettings}
+     */
+    constructor() {
+        this.ajaxLoading = false;
+        this.formResultPlaceholder = document.getElementById('rd-fontawesome-form-result-placeholder');
+    }// constructor
+
+
+    /**
      * Detect current active tab target ID.
      * 
      * @private This method was called from `init()`.
@@ -70,8 +81,10 @@ class RdFontAwesomeSettings {
         this.setActiveTabContent(activeTabId);
         this.listenClickTab();
 
+        this.testPersonalAccessToken();
         this.retrieveLatestVersion();
         this.installLatestVersion();
+        this.uninstall();
 
         this.listenFormSubmit();
     }// init
@@ -88,8 +101,6 @@ class RdFontAwesomeSettings {
         let installedVersionElement = document.getElementById('rd-fontawesome-currentversion');
         let latestVersionElement = document.getElementById('rd-fontawesome-latestversion');
         let installBtn = document.getElementById('rd-fontawesome-install-latestversion-btn');
-        let formResultPlaceholder = document.getElementById('rd-fontawesome-form-result-placeholder');
-        let rdfontawesomeLoading = false;
 
         if (installBtn) {
             installBtn.addEventListener('click', (e) => {
@@ -98,13 +109,14 @@ class RdFontAwesomeSettings {
                 let ajaxdata = {
                     'action': 'rdfontawesome_installlatestversion',
                     'nonce': RdFontAwesomeSettingsObject.nonce,
-                    'download_type': document.getElementById('rd-fontawesome-download_type').value
+                    'ghpersonalaccesstoken': document.getElementById('rd-fontawesome-ghpersonalaccesstoken').value,
+                    'major_version': document.getElementById('rd-fontawesome-major_version').value
                 };
 
-                if (false === rdfontawesomeLoading) {
-                    installedVersionElement.innerHTML = RdFontAwesomeSettingsObject.txtLoading;
-                    formResultPlaceholder.innerHTML = '';
-                    rdfontawesomeLoading = true;
+                if (false === this.ajaxLoading) {
+                    this.ajaxLoading = true;
+                    thisClass.resetPlaceholders();
+                    installedVersionElement.innerText = RdFontAwesomeSettingsObject.txtLoading;
 
                     jQuery.ajax({
                         'url': ajaxurl,
@@ -112,19 +124,21 @@ class RdFontAwesomeSettings {
                         'data': ajaxdata
                     })
                     .done((data, textStatus, jqXHR) => {
-                        if (data && data.tagVersion) {
-                            let previewHTML = data.tagVersion;
-                            installedVersionElement.innerHTML = previewHTML;
+                        if (data) {
+                            if (data.tagVersion) {
+                                let previewHTML = thisClass.stripTags(data.tagVersion);
+                                installedVersionElement.innerHTML = previewHTML;
 
-                            let previewLatestVerHTML = '<a href="' + data.downloadLink + '" target="_blank">' + data.tagVersion + '</a>';
-                            latestVersionElement.innerHTML = previewLatestVerHTML;
-                        } else {
-                            installedVersionElement.innerHTML = '-';
-                        }
+                                let previewLatestVerHTML = '<a href="' + thisClass.stripTags(data.downloadLink) + '" target="_blank">' + thisClass.stripTags(data.tagVersion) + '</a>';
+                                latestVersionElement.innerHTML = previewLatestVerHTML;
+                            } else {
+                                installedVersionElement.innerText = '-';
+                            }
 
-                        if (data && data.formResultMessage) {
-                            let alertBox = thisClass.generateAlertBox(data.formResultMessage);
-                            formResultPlaceholder.innerHTML = alertBox;
+                            if (data.formResult && data.formResultMessage) {
+                                let alertBox = thisClass.generateAlertBox(data.formResultMessage, data.formResult);
+                                thisClass.formResultPlaceholder.innerHTML = alertBox;
+                            }
                         }
                     })
                     .fail((jqXHR, textStatus, errorThrown) => {
@@ -133,15 +147,15 @@ class RdFontAwesomeSettings {
                             response = jqXHR.responseJSON;
                         }
 
-                        installedVersionElement.innerHTML = '-';
+                        installedVersionElement.innerText = '-';
 
-                        if (response && response.formResultMessage) {
-                            let alertBox = thisClass.generateAlertBox(response.formResultMessage, 'error');
-                            formResultPlaceholder.innerHTML = alertBox;
+                        if (response && response.formResult && response.formResultMessage) {
+                            let alertBox = thisClass.generateAlertBox(response.formResultMessage, response.formResult);
+                            thisClass.formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
                     .always((data, textStatus, jqXHR) => {
-                        rdfontawesomeLoading = false;
+                        this.ajaxLoading = false;
                     });
                 }
             });// end click event listener.
@@ -183,9 +197,8 @@ class RdFontAwesomeSettings {
     listenFormSubmit() {
         let thisClass = this;
         let thisForm = document.getElementById('rd-fontawesome-settings-form');
-        let formResultPlaceholder = document.getElementById('rd-fontawesome-form-result-placeholder');
         let submitResultMessagePlaceholder = document.getElementById('rd-fontawesome-settings-submit-resultmessage');
-        let rdfontawesomeLoading = false;
+        let useLoadingMessageInRsult = false;
 
         if (thisForm) {
             thisForm.addEventListener('submit', (e) => {
@@ -195,10 +208,11 @@ class RdFontAwesomeSettings {
                 formData.append('action', 'rdfontawesome_savesettings');
                 formData.append('nonce', RdFontAwesomeSettingsObject.nonce);
 
-                if (false === rdfontawesomeLoading) {
-                    rdfontawesomeLoading = true;
-                    formResultPlaceholder.innerHTML = '';
-                    submitResultMessagePlaceholder.innerHTML = '';
+                if (false === thisClass.ajaxLoading) {
+                    thisClass.ajaxLoading = true;
+                    thisClass.resetPlaceholders();
+                    submitResultMessagePlaceholder.innerText = RdFontAwesomeSettingsObject.txtLoading;
+                    useLoadingMessageInRsult = true;
 
                     jQuery.ajax({
                         'url': ajaxurl,
@@ -209,13 +223,14 @@ class RdFontAwesomeSettings {
                         if (data) {
                             if (data.formResultMessage) {
                                 let alertBox = thisClass.generateAlertBox(data.formResultMessage, data.formResult);
-                                formResultPlaceholder.innerHTML = alertBox;
+                                thisClass.formResultPlaceholder.innerHTML = alertBox;
                                 if (data.pendingScan === true) {
                                     let submitResultMsg = '';
                                     for (let i = 0; i < data.formResultMessage.length; i++) {
                                         submitResultMsg += data.formResultMessage[i] + '<br>';
                                     }
                                     submitResultMessagePlaceholder.innerHTML = submitResultMsg;
+                                    useLoadingMessageInRsult = false;
                                 }
                             }
 
@@ -235,11 +250,14 @@ class RdFontAwesomeSettings {
 
                         if (response && response.formResultMessage) {
                             let alertBox = thisClass.generateAlertBox(response.formResultMessage, 'error');
-                            formResultPlaceholder.innerHTML = alertBox;
+                            thisClass.formResultPlaceholder.innerHTML = alertBox;
                         }
                     })
                     .always((data, textStatus, jqXHR) => {
-                        rdfontawesomeLoading = false;
+                        thisClass.ajaxLoading = false;
+                        if (useLoadingMessageInRsult === true) {
+                            submitResultMessagePlaceholder.innerText = '';
+                        }
                     });
                 }
             });
@@ -250,15 +268,28 @@ class RdFontAwesomeSettings {
 
 
     /**
+     * Reset placeholders to empty.
+     * 
+     * @private
+     * @returns {undefined}
+     */
+    resetPlaceholders() {
+        this.formResultPlaceholder.innerHTML = '';
+        document.getElementById('rd-fontawesome-test-ghpersonalaccesstoken-result').innerHTML = '';
+        document.getElementById('rd-fontawesome-settings-submit-resultmessage').innerHTML = '';
+    }// resetPlaceholders
+
+
+    /**
      * Retrieve latest version.
      * 
      * @private This method was called from `init()`.
      * @returns {undefined}
      */
     retrieveLatestVersion() {
+        let thisClass = this;
         let retrieveBtn = document.getElementById('rd-fontawesome-retrieve-latestversion-btn');
         let latestVersionElement = document.getElementById('rd-fontawesome-latestversion');
-        let rdfontawesomeLoading = false;
 
         if (retrieveBtn) {
             retrieveBtn.addEventListener('click', (e) => {
@@ -267,31 +298,40 @@ class RdFontAwesomeSettings {
                 let ajaxdata = {
                     'action': 'rdfontawesome_retrievelatestversion',
                     'nonce': RdFontAwesomeSettingsObject.nonce,
-                    'download_type': document.getElementById('rd-fontawesome-download_type').value
+                    'ghpersonalaccesstoken': document.getElementById('rd-fontawesome-ghpersonalaccesstoken').value,
+                    'major_version': document.getElementById('rd-fontawesome-major_version').value
                 };
 
-                if (false === rdfontawesomeLoading) {
-                    latestVersionElement.innerHTML = RdFontAwesomeSettingsObject.txtLoading;
-                    rdfontawesomeLoading = true;
+                if (false === thisClass.ajaxLoading) {
+                    thisClass.ajaxLoading = true;
+                    thisClass.resetPlaceholders();
+                    latestVersionElement.innerText = RdFontAwesomeSettingsObject.txtLoading;
 
                     jQuery.ajax({
                         'url': ajaxurl,
-                        'method': 'get',
+                        'method': 'post',
                         'data': ajaxdata
                     })
                     .done((data, textStatus, jqXHR) => {
-                        if (data && data.downloadLink && data.tagVersion) {
-                            let previewHTML = '<a href="' + data.downloadLink + '" target="_blank">' + data.tagVersion + '</a>';
-                            latestVersionElement.innerHTML = previewHTML;
-                        } else {
-                            latestVersionElement.innerHTML = '-';
+                        if (data) {
+                            if (data.downloadLink && data.tagVersion) {
+                                let previewHTML = '<a href="' + thisClass.stripTags(data.downloadLink) + '" target="_blank">' + thisClass.stripTags(data.tagVersion) + '</a>';
+                                latestVersionElement.innerHTML = previewHTML;
+                            } else {
+                                latestVersionElement.innerText = '-';
+                            }
+
+                            if (data.formResult && data.formResultMessage) {
+                                let alertBox = thisClass.generateAlertBox(data.formResultMessage, data.formResult);
+                                this.formResultPlaceholder.innerHTML = alertBox;
+                            }
                         }
                     })
                     .fail((jqXHR, textStatus, errorThrown) => {
-                        latestVersionElement.innerHTML = '-';
+                        latestVersionElement.innerText = '-';
                     })
                     .always((data, textStatus, jqXHR) => {
-                        rdfontawesomeLoading = false;
+                        thisClass.ajaxLoading = false;
                     });
                 }
             });// end click event listener.
@@ -342,6 +382,123 @@ class RdFontAwesomeSettings {
             HTMLElement.classList.add('active');
         }
     }// setActiveTabNav
+
+
+    /**
+     * Strip HTML tags.
+     * 
+     * @param {string} string
+     * @returns {unresolved}
+     */
+    stripTags(string) {
+        return string.replace(/<\/?[^>]+(>|$)/g, "");
+    }// stripTags
+
+
+    /**
+     * Test GitHub personal token.
+     * 
+     * @private This method was called from `init()`.
+     * @returns {undefined}
+     */
+    testPersonalAccessToken() {
+        let thisClass = this;
+        let testTokenBtn = document.getElementById('rd-fontawesome-test-ghpersonalaccesstoken');
+        let testResultPlaceholder = document.getElementById('rd-fontawesome-test-ghpersonalaccesstoken-result');
+
+        testTokenBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            let ajaxdata = {
+                'action': 'rdfontawesome_testghpersonalaccesstoken',
+                'nonce': RdFontAwesomeSettingsObject.nonce,
+                'ghpersonalaccesstoken': document.getElementById('rd-fontawesome-ghpersonalaccesstoken').value
+            };
+
+            if (false === thisClass.ajaxLoading) {
+                thisClass.ajaxLoading = true;
+                thisClass.resetPlaceholders();
+                testResultPlaceholder.innerText = RdFontAwesomeSettingsObject.txtLoading;
+
+                jQuery.ajax({
+                    'url': ajaxurl,
+                    'method': 'post',
+                    'data': ajaxdata
+                })
+                .done((data, textStatus, jqXHR) => {
+                    if (data && data.formResultMessage) {
+                        testResultPlaceholder.innerText = data.formResultMessage;
+                    }
+                })
+                .fail((jqXHR, textStatus, errorThrown) => {
+                    testResultPlaceholder.innerText = '';
+                })
+                .always((data, textStatus, jqXHR) => {
+                    thisClass.ajaxLoading = false;
+                });
+            }
+        });
+
+        // also prevent press enter on token input.
+        let tokenInput = document.getElementById('rd-fontawesome-ghpersonalaccesstoken');
+        tokenInput.addEventListener('keypress', (e) => {
+            if (
+                e.key === 'Enter'
+            ) {
+                e.preventDefault();
+            }
+        });
+    }// testPersonalAccessToken
+
+
+    /**
+     * Uninstall currently downloaded and installed Font Awesome files.
+     * 
+     * @private This method was called from `init()`.
+     * @returns {undefined}
+     */
+    uninstall() {
+        let thisClass = this;
+        let uninstallBtn = document.getElementById('rd-fontawesome-delete-installed-btn');
+        let installedVersionElement = document.getElementById('rd-fontawesome-currentversion');
+
+        uninstallBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            let ajaxdata = {
+                'action': 'rdfontawesome_uninstallfontawesome',
+                'nonce': RdFontAwesomeSettingsObject.nonce,
+            };
+
+            if (false === thisClass.ajaxLoading) {
+                thisClass.ajaxLoading = true;
+                thisClass.resetPlaceholders();
+
+                jQuery.ajax({
+                    'url': ajaxurl,
+                    'method': 'post',
+                    'data': ajaxdata
+                })
+                .done((data, textStatus, jqXHR) => {
+                    if (data) {
+                        if (data.result && data.result === true) {
+                            installedVersionElement.innerText = '-';
+                        }
+
+                        if (data.formResult && data.formResultMessage) {
+                            let alertBox = thisClass.generateAlertBox(data.formResultMessage, data.formResult);
+                            this.formResultPlaceholder.innerHTML = alertBox;
+                        }
+                    }
+                })
+                .fail((jqXHR, textStatus, errorThrown) => {
+                })
+                .always((data, textStatus, jqXHR) => {
+                    thisClass.ajaxLoading = false;
+                });
+            }
+        });
+    }// uninstall
 
 
 }// RdFontAwesomeSettings

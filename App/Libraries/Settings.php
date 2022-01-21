@@ -17,9 +17,9 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Settings')) {
 
 
         /**
-         * @var string
+         * @var string The main option name of this plugin.
          */
-        protected $settingsFile;
+        const OPTION_NAME = 'rd-fontawesome';
 
 
         /**
@@ -27,12 +27,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Settings')) {
          */
         public function __construct()
         {
-            $this->settingsFile = plugin_dir_path(RDFONTAWESOME_FILE) . 'settings.json';
         }// __construct
 
 
         /**
-         * Get all settings from [plugin]/settings.json file.
+         * Get all settings.
          * 
          * @return array
          */
@@ -40,23 +39,18 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Settings')) {
         {
             $output = [];
 
-            if (is_file($this->settingsFile)) {
-                $settingsContent = file_get_contents($this->settingsFile);
-                $settingsObj = json_decode($settingsContent);
-                unset($settingsContent);
-
-                if (is_object($settingsObj)) {
-                    $output = (array) $settingsObj;
-                }
-                unset($settingsObj);
+            $options = get_option(static::OPTION_NAME);
+            if (is_array($options)) {
+                $output = $options;
             }
+            unset($options);
 
             return $output;
         }// getAllSettings
 
 
         /**
-         * Save settings to file.
+         * Save settings.
          * 
          * @param array $settings The array key => value pair of settings. Example:
          *      <pre>array(
@@ -77,12 +71,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Settings')) {
             }
 
             $allSettings = array_merge($allSettings, $settings);
-            $settingsJSON = json_encode($allSettings, JSON_PRETTY_PRINT);
-            unset($allSettings);
-
-            $result = file_put_contents($this->settingsFile, $settingsJSON);
-
-            return ($result !== false);
+            return update_option(static::OPTION_NAME, $allSettings);
         }// saveSettings
 
 

@@ -32,6 +32,23 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
 
 
         /**
+         * Receive input major version, check if exists in available - if not then use default.
+         * 
+         * @return int.
+         */
+        protected function inputMajorVersion(): int
+        {
+            $major_version = (int) sanitize_text_field(filter_input(INPUT_POST, 'major_version', FILTER_SANITIZE_NUMBER_INT));
+            if (!in_array($major_version, ($this->getStaticPluginData())['majorVersions'])) {
+                // if selected major version is not in the list.
+                // use default.
+                $major_version = ($this->getStaticPluginData())['defaultMajorVersion'];
+            }
+            return $major_version;
+        }// inputMajorVersion
+
+
+        /**
          * Download and install latest Font Awesome version.
          */
         public function installLatestFAVersion()
@@ -44,38 +61,52 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
 
             $output = [];
             check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-            // the download_type is for programmatic use. it is already checked before use. so, it is no need to check value here.
-            $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
+            $personalToken = sanitize_text_field(filter_input(INPUT_POST, 'ghpersonalaccesstoken'));
+            $major_version = $this->inputMajorVersion();
 
-            $Settings = new \RdFontAwesome\App\Libraries\Settings();
-            $allSettings = $Settings->getAllSettings();
+            $output = array_merge($output, $this->Url->retrieveLatestVersion($personalToken, $major_version));
+            $output['tagVersion'] = sanitize_text_field($output['tagVersion']);
+            $output['downloadLink'] = esc_url_raw($output['downloadLink']);
+            $latestVersion = $output['tagVersion'];
+            $downloadLink = $output['downloadLink'];
 
-            $latestInfo = $this->Url->retrieveLatestVersion($downloadType);
-            $downloadLink = ($latestInfo['downloadLink'] ?? null);
-            $latestVersion = (isset($latestInfo['tagVersion']) ? strip_tags($latestInfo['tagVersion']) : null);
-            unset($latestInfo);
-
-            $statusCode = 200;
-            if (is_null($downloadLink) || is_null($latestVersion)) {
-                // if download link is not found or latest version info is not found.
-                $statusCode = 404;
+            if (isset($output['rateLimitRemaining']) && $output['rateLimitRemaining'] <= 0) {
+                $limitExceeded = true;
+                $statusCode = 403;
                 $output['formResult'] = 'error';
                 $output['formResultMessage'] = [
-                    __('Unable to retrieve latest version from GitHub.', 'rd-fontawesome'),
+                    __('Your request rate limit on GItHub has been exceeded.', 'rd-fontawesome'),
                 ];
-            } elseif (is_string($downloadLink) && !empty($downloadLink) && is_string($latestVersion)) {
-                // if found download link and latest version info.
+            }
+
+            if (
+                is_string($downloadLink) && 
+                !empty($downloadLink) && 
+                is_string($latestVersion) &&
+                !empty($latestVersion) &&
+                (
+                    !isset($limitExceeded) ||
+                    $limitExceeded !== true
+                )
+            ) {
+                // if found download link and latest version info and not GitHub API limit exceeded.
+                $statusCode = 200;
+                $Settings = new \RdFontAwesome\App\Libraries\Settings();
+                $allSettings = $Settings->getAllSettings();
+
                 if (
                     empty($allSettings) || 
                     (
                         isset($allSettings['fontawesome_version']) &&
-                        version_compare($allSettings['fontawesome_version'], $latestVersion, '<')
+                        version_compare($allSettings['fontawesome_version'], $major_version, '<')
                     ) ||
-                    !is_dir(($this->getStaticPluginData())['targetDistDir'])
+                    !is_dir(($this->getStaticPluginData())['targetPublishDir'])
                 ) {
                     // if never installed before OR older that latest released.
-                    $dlResult = $this->Url->downloadFile($downloadType, $downloadLink);
+                    $dlResult = $this->Url->downloadFile($downloadLink, $major_version);
+                    $output['downloadResult'] = $this->Url->downloadResult;
                     if (is_wp_error($dlResult)) {
+                        // if download has error occur.
                         $statusCode = 500;
                         $output['formResult'] = 'error';
                         $output['formResultMessage'] = [];
@@ -84,27 +115,34 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                         }// endforeach;
                         unset($eMessage);
                     } else {
+                        // if download has no error (but maybe soft errors).
                         $output['downloadResult'] = $dlResult;
                         if (false === $dlResult) {
-                            // if there are some errors but can continue.
+                            // if there are some soft errors but can continue.
                             $output['tempDir'] = $this->Url->tempDir;
                             $output['tempDirExists'] = (is_string($this->Url->tempDir) ? is_dir($this->Url->tempDir) : false);
-                        }
-                    }
+                            $output['formResult'] = 'warning';
+                            $output['formResultMessage'] = [
+                                __('You have installed latest version of Font Awesome. However, there are some files or directories that is unable to move to target path.', 'rd-fontawesome') .
+                                '<br>' .
+                                (isset($output['downloadResult']['move']['failedValidatedMove']) ? implode(',', $output['downloadResult']['move']['failedValidatedMove']) : ''),
+                            ];
+                        }// endif soft error.
 
-                    if (!is_wp_error($dlResult)) {
+                        // save latest version to DB.
                         $Settings->saveSettings([
-                            'download_type' => $downloadType,
+                            'major_version' => $major_version,
                             'fontawesome_version' => $latestVersion,
                         ]);
                         $output['allSettings'] = $Settings->getAllSettings();
-                        $output['downloadLink'] = $downloadLink;
-                        $output['tagVersion'] = ($output['allSettings']['fontawesome_version'] ?? null);
-                        $output['formResult'] = 'success';
-                        $output['formResultMessage'] = [
-                            __('Success! You have installed latest version of Font Awesome.', 'rd-fontawesome'),
-                        ];
-                    }
+
+                        if (!isset($output['formResult'])) {
+                            $output['formResult'] = 'success';
+                            $output['formResultMessage'] = [
+                                __('Success! You have installed latest version of Font Awesome.', 'rd-fontawesome'),
+                            ];
+                        }
+                    }// endif download has error or not.
                     unset($dlResult);
                 } else {
                     // if already installed and is using latest version.
@@ -120,18 +158,23 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                         __('Success! Your Font Awesome is already latest version.', 'rd-fontawesome'),
                     ];
                 }
+
+                unset($Settings);
             } else {
-                // if unknown errors.
-                $statusCode = 500;
-                $output['formResult'] = 'error';
-                $output['formResultMessage'] = [
-                    __('An unknown error occur!', 'rd-fontawesome'),
-                ];
-                $output['downloadLink'] = $downloadLink;
-                $output['latestVersion'] = $latestVersion;
+                // if download link is not found or latest version info is not found or limit exceeded (already set the errors message).
+                if (!isset($statusCode)) {
+                    $statusCode = 404;
+                }
+                if (!isset($output['formResult'])) {
+                    $output['formResult'] = 'error';
+                }
+                if (!isset($output['formResultMessage'])) {
+                    $output['formResultMessage'] = [];
+                }
+                $output['formResultMessage'][] = __('Unable to retrieve latest version from GitHub.', 'rd-fontawesome');
             }
 
-            unset($allSettings, $downloadType, $downloadLink, $latestVersion, $Settings);
+            unset($downloadLink, $latestVersion, $limitExceeded, $major_version, $personalToken);
             wp_send_json($output, $statusCode);
         }// installLatestFAVersion
 
@@ -142,9 +185,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         public function registerHooks()
         {
             if (is_admin()) {
-                add_action('wp_ajax_rdfontawesome_retrievelatestversion', [$this, 'retrieveLatestFAVersion']);
                 add_action('wp_ajax_rdfontawesome_installlatestversion', [$this, 'installLatestFAVersion']);
+                add_action('wp_ajax_rdfontawesome_retrievelatestversion', [$this, 'retrieveLatestFAVersion']);
                 add_action('wp_ajax_rdfontawesome_savesettings', [$this, 'saveSettings']);
+                add_action('wp_ajax_rdfontawesome_testghpersonalaccesstoken', [$this, 'testPersonalAccessToken']);
+                add_action('wp_ajax_rdfontawesome_uninstallfontawesome', [$this, 'uninstallFA']);
             }
         }// registerHooks
 
@@ -162,12 +207,21 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
 
             $output = [];
             check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
-            // the download_type is for programmatic use. it is already checked before use. so, it is no need to check value here.
-            $downloadType = (isset($_REQUEST['download_type']) ? strip_tags($_REQUEST['download_type']) : '');
+            $personalToken = sanitize_text_field(filter_input(INPUT_POST, 'ghpersonalaccesstoken'));
+            $major_version = $this->inputMajorVersion();
 
-            $output = array_merge($output, $this->Url->retrieveLatestVersion($downloadType));
+            $output = array_merge($output, $this->Url->retrieveLatestVersion($personalToken, $major_version));
+            $output['tagVersion'] = sanitize_text_field($output['tagVersion']);
+            $output['downloadLink'] = esc_url_raw($output['downloadLink']);
 
-            unset($downloadType);
+            if (isset($output['rateLimitRemaining']) && $output['rateLimitRemaining'] <= 0) {
+                $output['formResult'] = 'error';
+                $output['formResultMessage'] = [
+                    __('Your request rate limit on GItHub has been exceeded.', 'rd-fontawesome'),
+                ];
+            }
+
+            unset($major_version, $personalToken);
             wp_send_json($output);
         }// retrieveLatestFAVersion
 
@@ -186,14 +240,15 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
             $output = [];
             check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
 
+            // prepare input for save in settings.
             $data = [];
-            // the download_type is for programmatic use. it is already checked before use. so, it is no need to check value here.
-            $data['download_type'] = (isset($_POST['download_type']) && !empty(trim($_POST['download_type'])) ? trim(strip_tags($_POST['download_type'])) : 'github');
-            $data['dequeue_css'] = (isset($_POST['dequeue_css']) && !empty(trim($_POST['dequeue_css'])) ? trim(strip_tags($_POST['dequeue_css'])) : '');
-            $data['dequeue_js'] = (isset($_POST['dequeue_js']) && !empty(trim($_POST['dequeue_js'])) ? trim(strip_tags($_POST['dequeue_js'])) : '');
+            $data['ghpersonalaccesstoken'] = sanitize_text_field(filter_input(INPUT_POST, 'ghpersonalaccesstoken'));
+            $data['major_version'] = $this->inputMajorVersion();
+            $data['dequeue_css'] = sanitize_text_field(filter_input(INPUT_POST, 'dequeue_css'));
+            $data['dequeue_js'] = sanitize_text_field(filter_input(INPUT_POST, 'dequeue_js'));
             $data['donot_enqueue'] = (isset($_POST['donot_enqueue']) && $_POST['donot_enqueue'] === '1' ? '1' : '0');
 
-            // nromalize handles.
+            // nromalize handles. (xx, yy to be xx,yy)
             $Strings = new \RdFontAwesome\App\Libraries\Strings();
             $data['dequeue_css'] = $Strings->normalizeHandlesString($data['dequeue_css']);
             $data['dequeue_js'] = $Strings->normalizeHandlesString($data['dequeue_js']);
@@ -311,6 +366,82 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
 
             wp_send_json($output);
         }// saveSettings
+
+
+        /**
+         * Test GitHub personal access token.
+         */
+        public function testPersonalAccessToken()
+        {
+            // check permission.
+            if (!current_user_can('manage_options')) {
+                wp_die(__('You do not have permission to access this page.'));
+                exit();
+            }
+
+            $output = [];
+            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+            $personalToken = sanitize_text_field(filter_input(INPUT_POST, 'ghpersonalaccesstoken'));
+
+            $output['testResult'] = $this->Url->testPersonalAccessToken($personalToken);
+            if ($output['testResult']['success'] === true) {
+                $output['formResult'] = 'success';
+                $output['formResultMessage'] = [
+                    __('Success!', 'rd-fontawesome'),
+                ];
+            } else {
+                $output['formResult'] = 'error';
+                $output['formResultMessage'] = [
+                    __('Your access token is incorrect.', 'rd-fontawesome'),
+                ];
+            }
+
+            unset($personalToken);
+            wp_send_json($output);
+        }// testPersonalAccessToken
+
+
+        /**
+         * Delete installed Font Awesome files.
+         * 
+         * @global \WP_Filesystem_Base $wp_filesystem
+         */
+        public function uninstallFA()
+        {
+            // check permission.
+            if (!current_user_can('manage_options')) {
+                wp_die(__('You do not have permission to access this page.'));
+                exit();
+            }
+
+            $output = [];
+            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+
+            global $wp_filesystem;
+            WP_Filesystem();
+            $result1 = $wp_filesystem->delete(plugin_dir_path(RDFONTAWESOME_FILE) . '.temparchive', true);
+            $result2 = $wp_filesystem->delete(($this->getStaticPluginData())['targetPublishDir'], true);
+
+            if (true === $result2) {
+                $Settings = new \RdFontAwesome\App\Libraries\Settings();
+                $allSettings = $Settings->getAllSettings();
+                $allSettings['fontawesome_version'] = null;
+                $Settings->saveSettings($allSettings);
+                unset($allSettings, $Settings);
+            }
+
+            $output['result'] = (true === $result1 && true === $result2);
+            unset($result1, $result2);
+
+            if (true === $output['result']) {
+                $output['formResult'] = 'success';
+                $output['formResultMessage'] = [
+                    __('Font Awesome files were removed successfully.', 'rd-fontawesome'),
+                ];
+            }
+
+            wp_send_json($output);
+        }// uninstallFA
 
 
     }// SettingsAjax

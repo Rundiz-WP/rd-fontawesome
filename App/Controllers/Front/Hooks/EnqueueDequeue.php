@@ -91,12 +91,25 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
 
             if (!isset($allSettings['donot_enqueue']) || $allSettings['donot_enqueue'] !== '1') {
                 $faVersion = ($allSettings['fontawesome_version'] ?? false);
-                if (false !== $faVersion) {
-                    $faVersion = strip_tags($faVersion);
+                if (false === $faVersion) {
+                    // if not yet installed.
+                    return ;
                 }
-                $pluginUrlBase = ($this->getStaticPluginData())['targetDistURLBase'];
 
-                wp_enqueue_style('rd-fontawesome-allmin', $pluginUrlBase . '/css/all.min.css', [], $faVersion);
+                $majorVersion = ($allSettings['major_version'] ?? ($this->getStaticPluginData())['defaultMajorVersion']);
+                $Url = new \RdFontAwesome\App\Libraries\Url($this->getStaticPluginData());
+                $asset = $Url->getRequiredAssetsToEnqueue($majorVersion);
+                unset($majorVersion, $Url);
+
+                if (isset($asset['css']) && is_array($asset['css'])) {
+                    $i = 0;
+                    foreach ($asset['css'] as $css) {
+                        wp_enqueue_style('rd-fontawesome' . ($i > 0 ? $i : ''), $css, [], $faVersion);
+                        $i++;
+                    }// endforeach;
+                    unset($css, $i);
+                }
+                unset($asset, $faVersion);
             }
             unset($allSettings);
         }// enqueueAssets
@@ -115,7 +128,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
             if (isset($allSettings['dequeue_js']) && !empty($allSettings['dequeue_js'])) {
                 add_action('wp_enqueue_scripts', [$this, 'dequeueScripts'], 100);
             }
-            if (!isset($allSettings['donot_enqueue']) || $allSettings['donot_enqueue'] !== '1') {
+            if ((!isset($allSettings['donot_enqueue']) || $allSettings['donot_enqueue'] !== '1') && !empty($allSettings)) {
                 add_action('wp_enqueue_scripts', [$this, 'enqueueAssets']);
             }
             unset($allSettings);

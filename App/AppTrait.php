@@ -83,27 +83,48 @@ if (!trait_exists('\\RdFontAwesome\\App\\AppTrait')) {
 
 
             /**
+             * Get class instance from static method.
+             * 
+             * @return \self
+             */
+            public static function getInstance()
+            {
+                return new static();
+            }// getInstance
+
+
+            /**
              * Get static plugin data such as Font Awesome repository name, URL, plugin folder, plugin URL.
              * 
              * @return array Return associative array with keys:<br>
              *              'reponame' (string) Repository name. Example: name/repo<br>
-             *              'repoURLs' (array) Repository URLs.<br>
-             *                      'latestURL' (string) Latest release URL.<br>
+             *              'githubURLs' (array) GitHub URLs.<br>
              *                      'latestAPIURL' (string) Latest release as API URL.<br>
-             *              'targetDistDir' (string) The plugin assets/vendor/fontawesome folder path.<br>
-             *              'targetDistURLBase' (string) The plugin assets/vendor/fontawesome URL base.<br>
+             *                      'releasesAPIURL' (string) all releases.<br>
+             *                      'tagsAPIURL' (string) all tags.<br>
+             *                      'userProfile' (string) user profile.<br>
+             *              'targetPublishDir' (string) The publish path for CSS and JS assets.<br>
+             *              'targetPublishURLBase' (string) The publish URL for CSS and JS assets.<br>
              */
             public function getStaticPluginData(): array
             {
+                $githubAPIURL = 'https://api.github.com';
                 $reponame = 'FortAwesome/Font-Awesome';
                 return [
                     'reponame' => $reponame,
-                    'repoURLs' => [
-                        'latestURL' => 'https://github.com/' . $reponame . '/releases/latest',
-                        'latestAPIURL' => 'https://api.github.com/repos/' . $reponame . '/releases/latest',
+                    'majorVersions' => [
+                        4, 5,
                     ],
-                    'targetDistDir' => plugin_dir_path(RDFONTAWESOME_FILE) . 'assets/vendor/fontawesome',
-                    'targetDistURLBase' => plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/vendor/fontawesome',
+                    'defaultMajorVersion' => 5,
+                    'githubURLs' => [
+                        'latestAPIURL' => $githubAPIURL . '/repos/' . $reponame . '/releases/latest',
+                        'releasesAPIURL' => $githubAPIURL . '/repos/' . $reponame . '/releases',
+                        'releastByTagAPIURL' => $githubAPIURL . '/repos/' . $reponame . '/releases/tags',
+                        'tagsAPIURL' => $githubAPIURL . '/repos/' . $reponame . '/tags',
+                        'userProfile' => $githubAPIURL . '/user',
+                    ],
+                    'targetPublishDir' => WP_CONTENT_DIR . '/uploads/rd-fontawesome',
+                    'targetPublishURLBase' => WP_CONTENT_URL . '/uploads/rd-fontawesome',
                 ];
             }// getStaticPluginData
 

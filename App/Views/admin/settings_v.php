@@ -11,12 +11,58 @@
                 <table class="form-table" role="presentation">
                     <tbody>
                         <tr>
-                            <th scope="row"><?php esc_html_e('Download type', 'rd-fontawesome'); ?></th>
+                            <th scope="row"><?php esc_html_e('Use major version', 'rd-fontawesome'); ?></th>
                             <td>
-                                <select id="rd-fontawesome-download_type" name="download_type">
-                                    <option value="githubapi"<?php if (isset($settings['download_type']) && $settings['download_type'] === 'githubapi') {echo ' selected';} ?>><?php esc_attr_e('GitHub API', 'rd-fontawesome'); ?> (<?php esc_attr_e('Default', 'rd-fontawesome'); ?>)</option>
-                                    <option value="github"<?php if (isset($settings['download_type']) && $settings['download_type'] === 'github') {echo ' selected';} ?>><?php esc_attr_e('GitHub', 'rd-fontawesome'); ?></option>
+                                <select id="rd-fontawesome-major_version" name="major_version">
+                                    <?php
+                                    if (isset($allMajorVersions) && is_array($allMajorVersions)) {
+                                        foreach ($allMajorVersions as $version) {
+                                            echo '<option value="' . esc_attr($version) . '"';
+                                            if (isset($settings['major_version']) && strval($settings['major_version']) === strval($version)) {
+                                                echo ' selected';
+                                            }
+                                            echo '>' . esc_attr($version) . '</option>' . PHP_EOL;
+                                        }// endforeach;
+                                        unset($version);
+                                    }
+                                    unset($allMajorVersions);
+                                    ?> 
                                 </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?php esc_html_e('GitHub personal access token', 'rd-fontawesome'); ?></th>
+                            <td>
+                                <input id="rd-fontawesome-ghpersonalaccesstoken" type="text" name="ghpersonalaccesstoken" value="<?php esc_attr_e(($settings['ghpersonalaccesstoken'] ?? '')); ?>" autocomplete="off" placeholder="user:token">
+                                <button id="rd-fontawesome-test-ghpersonalaccesstoken" class="button" type="button"><?php esc_html_e('Test token', 'rd-fontawesome'); ?></button>
+                                <span id="rd-fontawesome-test-ghpersonalaccesstoken-result"></span>
+                                <p class="description"><?php 
+                                    esc_html_e('GitHub personal access token is optional, but without it you can only access to GitHub only 60 requests per hour. Access with token can make up to 5,000 requests per hour.', 'rd-fontawesome');
+                                    echo ' ';
+                                    echo '<a href="https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api#authentication" target="_blank">' . esc_html__('See reference.', 'rd-fontawesome') . '</a>';
+                                ?></p>
+                                <p class="description"><?php 
+                                printf(
+                                    /* translators: %1$s open link tag, %2$s close link tag */
+                                    esc_html__('Open GitHub %1$ssettings page%2$s and go to Developer settings > Personal access tokens.', 'rd-fontawesome'),
+                                    '<a href="https://github.com/settings/tokens" target="_blank">',
+                                    '</a>'
+                                );
+                                echo ' ';
+                                printf(
+                                    /* translators: %1$s required scope for GitHub token. */
+                                    esc_html__('Create token with these scopes: %1$s.', 'rd-fontawesome'),
+                                    '<code>repo:status</code>, <code>repo_deployment</code>, <code>public_repo</code>'
+                                );
+                                ?></p>
+                                <p class="description"><?php 
+                                printf(
+                                    /* translators: %1$s is user:token text, %2$s is user text. */
+                                    esc_html__('The value must be %1$s where %2$s is GitHub username.', 'rd-fontawesome'),
+                                    '<code>user:token</code>',
+                                    '<code>user</code>'
+                                );
+                                ?></p>
                             </td>
                         </tr>
                         <tr>
@@ -24,6 +70,7 @@
                             <td>
                                 <p id="rd-fontawesome-latestversion">-</p>
                                 <button id="rd-fontawesome-retrieve-latestversion-btn" class="button" type="button"><?php esc_html_e('Retrieve latest version info.', 'rd-fontawesome'); ?></button>
+                                <p class="description"><?php esc_html_e('This will be use latest minor version of selected major version.', 'rd-fontawesome'); ?></p>
                             </td>
                         </tr>
                         <tr>
@@ -31,6 +78,8 @@
                             <td>
                                 <p id="rd-fontawesome-currentversion"><?php esc_html_e(($settings['fontawesome_version'] ?? '-')); ?></p>
                                 <button id="rd-fontawesome-install-latestversion-btn" class="button" type="button"><?php esc_html_e('Install latest version', 'rd-fontawesome'); ?></button>
+                                <button id="rd-fontawesome-delete-installed-btn" class="button button-danger" type="button"><?php esc_html_e('Uninstall Font Awesome', 'rd-fontawesome'); ?></button>
+                                <p class="description"><?php esc_html_e('This will be use latest minor version of selected major version.', 'rd-fontawesome'); ?></p>
                             </td>
                         </tr>
                         <tr>
@@ -77,55 +126,7 @@
                 </p>
             </div><!--#rd-fontawesome-tab-settings-->
             <div id="rd-fontawesome-tab-svinfo">
-                <table class="rd-fontawesome-svinfo-table">
-                    <tbody>
-                        <tr>
-                            <th><?php esc_html_e('WordPress', 'rd-fontawesome'); ?>:</th>
-                            <td><?php esc_html_e($serverinfo['wpVersion']); ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php esc_html_e('PHP', 'rd-fontawesome'); ?>:</th>
-                            <td><?php esc_html_e(PHP_VERSION); ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php esc_html_e('Execution timeout', 'rd-fontawesome'); ?>:</th>
-                            <td><?php esc_html_e($serverinfo['phpExecTimeout']); ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php esc_html_e('Memory limit', 'rd-fontawesome'); ?>:</th>
-                            <td><?php esc_html_e($serverinfo['phpMemoryLimit']); ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php esc_html_e('WordPress Memory limit', 'rd-fontawesome'); ?>:</th>
-                            <td><?php esc_html_e($serverinfo['wpMemoryLimit']); ?>
-                                <p class="description"><code>WP_MAX_MEMORY_LIMIT</code></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><?php esc_html_e('Plugin version', 'rd-fontawesome'); ?>:</th>
-                            <td><?php esc_html_e(($serverinfo['pluginVersion'] ?? '?')); ?></td>
-                        </tr>
-                        <tr>
-                            <th><?php esc_html_e('Writable folders and files', 'rd-fontawesome'); ?>:</th>
-                            <td><?php 
-                            if (isset($serverinfo['writable'])) {
-                                foreach ($serverinfo['writable'] as $path => $pathResult) {
-                                    echo '<p>' . esc_html($path) . '<br>';
-                                    if ($pathResult === true) {
-                                        esc_html_e('Yes', 'rd-fontawesome');
-                                    } elseif ($pathResult === false) {
-                                        echo '<span class="rd-fontawesome-txt-error">' . __('No', 'rd-fontawesome') . '</span>';
-                                    } elseif ($pathResult === 'filenotexists') {
-                                        echo '<span class="rd-fontawesome-txt-error">' . __('Not exists', 'rd-fontawesome') . '</span>';
-                                    }
-                                    echo '</p>' . PHP_EOL;
-                                }// endforeach;
-                                unset($pathResult, $path);
-                            }
-                            ?></td>
-                        </tr>
-                    </tbody>
-                </table><!--.rd-fontawesome-svinfo-table-->
+                <?php require __DIR__ . DIRECTORY_SEPARATOR . 'settings_serverinfo_tab.php'; ?> 
             </div><!--#rd-fontawesome-tab-svinfo-->
         </div><!--.rd-fontawesome-tabs-content-->
         

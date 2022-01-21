@@ -57,7 +57,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\PrintScripts
 
             $FAScan = new \RdFontAwesome\App\Libraries\FAScan();
             $cssHandles = $FAScan->doScan($cssHandles);
-            $jsHandles = $FAScan->doScan($jsHandles);
+            $jsHandles = $FAScan->doScan($jsHandles, 'js');
             $hashed = $FAScan->setHashNames($cssHandles, $jsHandles);
             unset($FAScan);
 

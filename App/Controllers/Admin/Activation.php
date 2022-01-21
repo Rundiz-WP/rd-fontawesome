@@ -58,15 +58,21 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Activation')) {
          * delete the plugin.
          * 
          * @global \wpdb $wpdb
+         * @global \WP_Filesystem_Base $wp_filesystem
          */
         public static function uninstall()
         {
             // do something that will be happens on delete plugin.
-            global $wpdb;
+            global $wpdb, $wp_filesystem;
+            WP_Filesystem();
             $wpdb->show_errors();
 
-            // this plugin keep settings into file base.
-            // so, it is no need to `delete_option()` here because all files in this plugin will be delete on uninstall by WordPress core anyway.
+            // delete Font Awesome files in publish path.
+            $thisClass = static::getInstance();
+            $wp_filesystem->delete(($thisClass->getStaticPluginData())['targetPublishDir'], true);
+
+            // delete option
+            delete_option(\RdFontAwesome\App\Libraries\Settings::OPTION_NAME);
         }// uninstall
 
 
