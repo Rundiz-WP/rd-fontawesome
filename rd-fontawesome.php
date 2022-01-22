@@ -25,9 +25,6 @@ if (!defined('RDFONTAWESOME_FILE')) {
 require __DIR__.'/autoload.php';
 
 
-require_once __DIR__ . '/App/functions/polyfill.php';
-
-
 // initialize plugin app main class.
 $this_plugin_app = new \RdFontAwesome\App\App();
 $this_plugin_app->run();

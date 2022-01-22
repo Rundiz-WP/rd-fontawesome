@@ -23,6 +23,26 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Loader')) {
 
 
         /**
+         * Automatic `require_once` all files in App/functions folder.
+         */
+        public function autoLoadFunctions()
+        {
+            $this_plugin_dir = dirname(RDFONTAWESOME_FILE);
+            $di = new \RecursiveDirectoryIterator($this_plugin_dir . DIRECTORY_SEPARATOR . 'App' . DIRECTORY_SEPARATOR . 'functions', \RecursiveDirectoryIterator::SKIP_DOTS);
+            $it = new \RecursiveIteratorIterator($di);
+            unset($di);
+
+            foreach ($it as $file) {
+                if (is_file($file)) {
+                    require_once $file;
+                }
+            }// endforeach;
+
+            unset($file, $it, $this_plugin_dir);
+        }// autoloadFunctions
+
+
+        /**
          * Automatic look into those controllers and register to the main App class to make it works.
          * 
          * The controllers that will be register must extended `\RdFontAwesome\App\Controllers\BaseController`

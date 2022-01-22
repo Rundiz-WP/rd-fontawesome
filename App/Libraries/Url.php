@@ -202,6 +202,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
          * @param int $majorVersion
          * @return array Return associative array with key:<br>
          *      `css` (array) The list of CSS files.<br>
+         *      If not found any condition matched major version then return empty array.
          */
         public function getRequiredAssetsToEnqueue(int $majorVersion): array
         {
@@ -216,6 +217,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                     'css' => [$pluginUrlBase . '/css/all.min.css'],
                 ];
             }
+            return [];
         }// getRequiredAssetsToEnqueue
 
 

@@ -42,6 +42,7 @@ if (!class_exists('\\RdFontAwesome\App\\App')) {
             // Initialize the loader class.
             $this->Loader = new \RdFontAwesome\App\Libraries\Loader();
             $this->Loader->App = $this;
+            $this->Loader->autoLoadFunctions();
             $this->Loader->autoRegisterControllers();
         }// run
 
