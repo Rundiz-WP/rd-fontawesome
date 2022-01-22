@@ -104,12 +104,6 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
             $tempDownloadedFile = download_url($downloadLink);
             if (is_wp_error($tempDownloadedFile)) {
                 return $tempDownloadedFile;
-            } elseif (stripos($tempDownloadedFile, '.zip') === false) {
-                return new \WP_Error(
-                    'RDFA_NOTZIP', 
-                    /* translators: %1$s the downloaded file path. */
-                    sprintf(__('The downloaded file is not zip file. (%1$s).', 'rd-fontawesome'), $tempDownloadedFile)
-                );
             }
 
             // prepare new temp folder.
