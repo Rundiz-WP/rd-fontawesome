@@ -3,7 +3,7 @@
  * Plugin Name: Rundiz Font Awesome
  * Plugin URI: https://rundiz.com/?p=319
  * Description: Use Font Awesome from your host and update from GitHub.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires at least: 5.0
  * Requires PHP: 7.0
  * Author: Vee Winch
