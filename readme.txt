@@ -22,7 +22,7 @@ You can dequeue duplicated Font Awesome handles from other plugins or themes to 
 
 You can disable enqueue from this plugin in case you would like to do it manually.  
 To get asset files for manually enqueue, use this code.
-```
+<pre>
 if (function_exists('rdfontawesome_get_enqueue_files')) {
     $result = rdfontawesome_get_enqueue_files();
     if (isset($result['css']) && is_array($result['css'])) {
@@ -33,14 +33,14 @@ if (function_exists('rdfontawesome_get_enqueue_files')) {
         unset($css, $faVersion);
     }
 }
-```
+</pre>
 
 To get URL base of the Font Awesome assets for use another files, use this code.
-```
+<pre>
 if (function_exists('rdfontawesome_get_public_url_base')) {
     echo rdfontawesome_get_public_url_base();
 }
-```
+</pre>
 
 Font Awesome files are belong to https://fontawesome.com/
 
