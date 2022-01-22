@@ -87,8 +87,11 @@
                             <td>
                                 <input id="rd-fontawesome-dequeue-css" class="regular-text" type="text" name="dequeue_css" value="<?php esc_attr_e(($settings['dequeue_css'] ?? '')); ?>">
                                 <p class="description">
-                                    <?php esc_html_e('Dequeue the other Font Awesome CSS handles that was enqueued by other plugins or themes.', 'rd-fontawesome'); ?> 
                                     <?php 
+                                    esc_html_e('Dequeue the other Font Awesome CSS handles that was enqueued by other plugins or themes.', 'rd-fontawesome');
+                                    echo ' ';
+                                    esc_html_e('This affects only the front pages.', 'rd-fontawesome');
+                                    echo ' ';
                                     /* translators: %1$s comma sign. */
                                     printf(__('Separate values by %1$s.', 'rd-fontawesome'), '<code>,</code>'); 
                                     ?> 
@@ -100,8 +103,10 @@
                             <td>
                                 <input id="rd-fontawesome-dequeue-js" class="regular-text" type="text" name="dequeue_js" value="<?php esc_attr_e(($settings['dequeue_js'] ?? '')); ?>">
                                 <p class="description">
-                                    <?php esc_html_e('Dequeue the  other Font Awesome JavaScript handles that was enqueued by other plugins or themes.', 'rd-fontawesome'); ?> 
-                                    <?php 
+                                    <?php esc_html_e('Dequeue the  other Font Awesome JavaScript handles that was enqueued by other plugins or themes.', 'rd-fontawesome'); 
+                                    echo ' ';
+                                    esc_html_e('This affects only the front pages.', 'rd-fontawesome');
+                                    echo ' ';
                                     /* translators: %1$s comma sign. */
                                     printf(__('Separate values by %1$s.', 'rd-fontawesome'), '<code>,</code>'); 
                                     ?> 
@@ -114,7 +119,7 @@
                                 <input id="rd-fontawesome-dontenqueue" type="checkbox" name="donot_enqueue" value="1"<?php if (isset($settings['donot_enqueue']) && $settings['donot_enqueue'] === '1') {echo ' checked';} ?>>
                                 <p class="description">
                                     <?php esc_html_e('Check this box to do not enqueue assets for this plugin.', 'rd-fontawesome'); ?> 
-                                    <?php esc_html_e('The assets for this plugin such as CSS, fonts won\'t be loaded.', 'rd-fontawesome'); ?> 
+                                    <?php esc_html_e('The assets for this plugin such as CSS, fonts won\'t be loaded on the front pages.', 'rd-fontawesome'); ?> 
                                 </p>
                             </td>
                         </tr>
