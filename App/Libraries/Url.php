@@ -168,13 +168,14 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
          */
         protected function getMoveFilesList(int $majorVersion)
         {
+            // @todo [rd-fontawesome] set major version move files here.
             if (4 === $majorVersion) {
                 $moveFiles = [
                     'css',
                     'fonts',
                     'README.md',
                 ];
-            } elseif (5 === $majorVersion) {
+            } elseif (5 === $majorVersion || 6 === $majorVersion) {
                 $moveFiles = [
                     'css',
                     'js',
@@ -202,11 +203,12 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
         {
             $pluginUrlBase = $this->data['targetPublishURLBase'];
 
+            // @todo [rd-fontawesome] set major version asset to enqueue here.
             if (4 === $majorVersion) {
                 return [
                     'css' => [$pluginUrlBase . '/css/font-awesome.min.css'],
                 ];
-            } elseif (5 === $majorVersion) {
+            } elseif (5 === $majorVersion || 6 === $majorVersion) {
                 return [
                     'css' => [$pluginUrlBase . '/css/all.min.css'],
                 ];
@@ -497,12 +499,13 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
             $validFontAwesomeFiles = false;
             $newVersionDir = null;
 
+            // @todo [rd-fontawesome] set major version validate files here.
             if (4 === $majorVersion) {
                 $validFiles = [
                     'css/font-awesome.min.css',
                     'fonts',
                 ];
-            } elseif (5 === $majorVersion) {
+            } elseif (5 === $majorVersion || 6 === $majorVersion) {
                 $validFiles = [
                     'css/all.min.css',
                     'js/all.min.js',

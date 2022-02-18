@@ -110,12 +110,13 @@ if (!trait_exists('\\RdFontAwesome\\App\\AppTrait')) {
             {
                 $githubAPIURL = 'https://api.github.com';
                 $reponame = 'FortAwesome/Font-Awesome';
+                // @todo [rd-fontawesome] add major version for select box here.
                 return [
                     'reponame' => $reponame,
                     'majorVersions' => [
-                        4, 5,
+                        4, 5, 6,
                     ],
-                    'defaultMajorVersion' => 5,
+                    'defaultMajorVersion' => 6,
                     'githubURLs' => [
                         'latestAPIURL' => $githubAPIURL . '/repos/' . $reponame . '/releases/latest',
                         'releasesAPIURL' => $githubAPIURL . '/repos/' . $reponame . '/releases',

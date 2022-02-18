@@ -3,7 +3,7 @@ Contributors: okvee
 Tags: fontawesome, font awesome, icons
 Requires at least: 5.0
 Tested up to: 5.9
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Requires PHP: 7.0
 License: MIT
 License URI: http://opensource.org/licenses/MIT
@@ -13,8 +13,8 @@ Use Font Awesome from your host and update from GitHub.
 == Description ==
 Use Font Awesome icons from your own host/server. Update the latest releases from GitHub.
 
-Choose the major version and install the latest minor version. For example: Choose major version 5, and install the latest of 5.x.xx.  
-Currently supported for version 4 and 5.
+Choose the major version and install the latest minor version. For example: Choose major version 6, and install the latest of 6.x.xx.  
+Currently supported for version 4, 5, 6.
 
 This plugin did not use CDN (content delivery network). If you want to use CDN, please use official Font Awesome plugin instead.
 
@@ -68,6 +68,11 @@ This plugin download all necessary files that is ready to use such as CSS, fonts
 1. Settings page.
 
 == Changelog ==
+= 1.0.2 =
+2022-02-18
+
+* Add Font Awesome version 6 supported.
+
 = 1.0.1 =
 2022-01-22
 
