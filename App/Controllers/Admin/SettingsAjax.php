@@ -98,11 +98,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                     empty($allSettings) || 
                     (
                         isset($allSettings['fontawesome_version']) &&
-                        version_compare($allSettings['fontawesome_version'], $major_version, '<')
+                        version_compare($allSettings['fontawesome_version'], $latestVersion, '<')
                     ) ||
                     !is_dir(($this->getStaticPluginData())['targetPublishDir'])
                 ) {
-                    // if never installed before OR older that latest released.
+                    // if never installed before OR older than latest released.
                     $dlResult = $this->Url->downloadFile($downloadLink, $major_version);
                     $output['downloadResult'] = $this->Url->downloadResult;
                     if (is_wp_error($dlResult)) {
@@ -150,6 +150,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                         'result' => true,
                         'latestVersion' => $latestVersion,
                         'currentVersion' => ($allSettings['fontawesome_version'] ?? null),
+                        'alreadyLatest' => true,
                     ];
                     $output['downloadLink'] = $downloadLink;
                     $output['tagVersion'] = ($allSettings['fontawesome_version'] ?? null);
