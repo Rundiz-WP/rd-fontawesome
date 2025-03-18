@@ -3,7 +3,7 @@ Contributors: okvee
 Tags: fontawesome, font awesome, icons
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 Requires PHP: 7.0
 License: MIT
 License URI: http://opensource.org/licenses/MIT
@@ -68,6 +68,11 @@ This plugin download all necessary files that is ready to use such as CSS, fonts
 1. Settings page.
 
 == Changelog ==
+= 1.0.4 =
+2025-03-18
+
+* Update load text domain to be inside `init` hook.
+
 = 1.0.3 =
 2024-07-07
 
