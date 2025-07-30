@@ -14,7 +14,7 @@ Use Font Awesome from your host and update from GitHub.
 Use Font Awesome icons from your own host/server. Update the latest releases from GitHub.
 
 Choose the major version and install the latest minor version. For example: Choose major version 6, and install the latest of 6.x.xx.  
-Currently supported for version 4, 5, 6.
+Currently supported for version 4, 5, 6, 7.
 
 This plugin did not use CDN (content delivery network). If you want to use CDN, please use official Font Awesome plugin instead.
 
