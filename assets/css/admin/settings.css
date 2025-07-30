@@ -5,6 +5,14 @@ Admin Settings page.
 */
 
 
+pre {
+    background-color: rgba(0, 0, 0, .07);/* use the same as WP admin `<code>` CSS. */
+    border-radius: 4px;/* use the same as WP admin CSS input border radius. */
+    color: #50575e;/* use the same as WP admin `<code>` CSS. */
+    padding: 7px;
+}
+
+
 .rd-fontawesome-svinfo-table {
     border-collapse: collapse;
     width: 100%;

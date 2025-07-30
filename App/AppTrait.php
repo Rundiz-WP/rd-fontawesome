@@ -114,7 +114,7 @@ if (!trait_exists('\\RdFontAwesome\\App\\AppTrait')) {
                 return [
                     'reponame' => $reponame,
                     'majorVersions' => [
-                        4, 5, 6,
+                        4, 5, 6, 7,
                     ],
                     'defaultMajorVersion' => 6,
                     'githubURLs' => [

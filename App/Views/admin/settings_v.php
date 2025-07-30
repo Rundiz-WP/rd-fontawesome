@@ -121,6 +121,21 @@
                                     <?php esc_html_e('Check this box to do not enqueue assets for this plugin.', 'rd-fontawesome'); ?> 
                                     <?php esc_html_e('The assets for this plugin such as CSS, fonts won\'t be loaded on the front pages.', 'rd-fontawesome'); ?> 
                                 </p>
+                                <p class="description"><?php esc_html_e('You can manually enqueue asset files by use the code below.', 'rd-fontawesome'); ?></p>
+                                <pre><?php 
+                                $codeManualEnqueue = 'if (function_exists(\'rdfontawesome_get_enqueue_files\')) {
+    $result = rdfontawesome_get_enqueue_files();
+    if (isset($result[\'css\']) && is_array($result[\'css\'])) {
+        $faVersion = ($result[\'faVersion\'] ?? false);
+        foreach ($result[\'css\'] as $css) {
+            wp_enqueue_style(\'myplugin_fontawesome\', $css, [], $faVersion);
+        }
+        unset($css, $faVersion);
+    }
+}';
+                                esc_html_e($codeManualEnqueue);
+                                unset($codeManualEnqueue);
+                                ?></pre>
                             </td>
                         </tr>
                     </tbody>

@@ -184,6 +184,16 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                     'webfonts',
                     'LICENSE.txt',
                 ];
+            } elseif (7 === $majorVersion) {
+                $moveFiles = [
+                    'css',
+                    'js',
+                    'sprites',
+                    'sprites-full',
+                    'svgs',
+                    'webfonts',
+                    'LICENSE.txt',
+                ];
             } else {
                 $moveFiles = null;
             }
@@ -208,7 +218,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                 return [
                     'css' => [$pluginUrlBase . '/css/font-awesome.min.css'],
                 ];
-            } elseif (5 === $majorVersion || 6 === $majorVersion) {
+            } elseif (5 === $majorVersion || 6 === $majorVersion || 7 === $majorVersion) {
                 return [
                     'css' => [$pluginUrlBase . '/css/all.min.css'],
                 ];
@@ -241,7 +251,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                 return new \WP_Error(
                     'RDFA_CANTCREATEDIR', 
                     /* translators: %1$s the public path to Font Awesome asset. */
-                    sprintf(__('Unable to create directory at %1$s.', 'rd-fontawesome'), $targetPublishDir)
+                    sprintf(_x('Unable to create directory at %1$s.', 'public-path', 'rd-fontawesome'), $targetPublishDir)
                 );
             }
             unset($result);
@@ -510,6 +520,14 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                     'css/all.min.css',
                     'js/all.min.js',
                     'sprites',
+                    'webfonts',
+                ];
+            } elseif (7 === $majorVersion) {
+                $validFiles = [
+                    'css/all.min.css',
+                    'js/all.min.js',
+                    'sprites',
+                    'sprites-full',
                     'webfonts',
                 ];
             } else {
