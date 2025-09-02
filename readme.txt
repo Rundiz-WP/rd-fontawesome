@@ -2,11 +2,11 @@
 Contributors: okvee
 Tags: fontawesome, font awesome, icons
 Requires at least: 5.0
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 1.0.5
 Requires PHP: 7.0
 License: MIT
-License URI: http://opensource.org/licenses/MIT
+License URI: https://opensource.org/licenses/MIT
  
 Use Font Awesome from your host and update from GitHub.
 
@@ -42,7 +42,7 @@ if (function_exists('rdfontawesome_get_public_url_base')) {
 }
 </pre>
 
-Font Awesome files are belong to https://fontawesome.com/
+Font Awesome files are belong to https://fontawesome.com
 
 == Frequently Asked Questions ==
 

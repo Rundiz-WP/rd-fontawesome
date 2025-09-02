@@ -9,7 +9,7 @@
  * Author: Vee Winch
  * Author URI: https://rundiz.com
  * License: MIT
- * License URI: http://opensource.org/licenses/MIT
+ * License URI: https://opensource.org/licenses/MIT
  * Text Domain: rd-fontawesome
  * Domain Path: /App/languages
  */

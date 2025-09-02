@@ -2,16 +2,16 @@
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Rundiz Font Awesome 1.0.4\n"
+"Project-Id-Version: Rundiz Font Awesome 1.0.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/rd-fontawesome\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-30T18:25:46+07:00\n"
+"POT-Creation-Date: 2025-09-02T14:14:06+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: rd-fontawesome\n"
 
 #. Plugin Name of the plugin
@@ -38,6 +38,10 @@ msgstr ""
 #. Author URI of the plugin
 #: rd-fontawesome.php
 msgid "https://rundiz.com"
+msgstr ""
+
+#: App/Controllers/Admin/Activation.php:78
+msgid "Donate"
 msgstr ""
 
 #: App/Controllers/Admin/Settings.php:38
@@ -79,6 +83,7 @@ msgstr ""
 
 #. translators: %1$s open link, %2$s close link.
 #: App/Controllers/Admin/SettingsAjax.php:283
+#, php-format
 msgid "Save is pending. Please open your %1$shome%2$s to let scaning process work for scan dequeue files and come back to save again."
 msgstr ""
 
@@ -89,16 +94,19 @@ msgstr ""
 
 #. translators: %1$s the scanned result.
 #: App/Controllers/Admin/SettingsAjax.php:316
+#, php-format
 msgid "Some of your handles were removed due to failed to verify it's Font Awesome. (%1$s)"
 msgstr ""
 
 #. translators: %1$s the result of scanned CSS.
 #: App/Controllers/Admin/SettingsAjax.php:318
+#, php-format
 msgid "CSS: %1$s"
 msgstr ""
 
 #. translators: %1$s the result of scanned JS.
 #: App/Controllers/Admin/SettingsAjax.php:320
+#, php-format
 msgid "JS: %1$s"
 msgstr ""
 
@@ -120,6 +128,7 @@ msgstr ""
 
 #. translators: %1$s the public path to Font Awesome asset.
 #: App/Libraries/Url.php:254
+#, php-format
 msgctxt "public-path"
 msgid "Unable to create directory at %1$s."
 msgstr ""
@@ -131,11 +140,13 @@ msgstr ""
 
 #. translators: %1$s the plugin directory path.
 #: App/Libraries/Url.php:325
+#, php-format
 msgid "Unable to create directory at %1$s."
 msgstr ""
 
 #. translators: %1$s the required file name.
 #: App/Libraries/Url.php:557
+#, php-format
 msgid "The required Font Awesome file is not exists. (%1$s)"
 msgstr ""
 
@@ -213,16 +224,19 @@ msgstr ""
 
 #. translators: %1$s open link tag, %2$s close link tag
 #: App/Views/admin/settings_v.php:47
+#, php-format
 msgid "Open GitHub %1$ssettings page%2$s and go to Developer settings > Personal access tokens."
 msgstr ""
 
 #. translators: %1$s required scope for GitHub token.
 #: App/Views/admin/settings_v.php:54
+#, php-format
 msgid "Create token with these scopes: %1$s."
 msgstr ""
 
 #. translators: %1$s is user:token text, %2$s is user text.
 #: App/Views/admin/settings_v.php:61
+#, php-format
 msgid "The value must be %1$s where %2$s is GitHub username."
 msgstr ""
 
@@ -267,6 +281,7 @@ msgstr ""
 #. translators: %1$s comma sign.
 #: App/Views/admin/settings_v.php:96
 #: App/Views/admin/settings_v.php:111
+#, php-format
 msgid "Separate values by %1$s."
 msgstr ""
 
