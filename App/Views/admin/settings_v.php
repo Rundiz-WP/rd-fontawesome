@@ -127,10 +127,10 @@
     $result = rdfontawesome_get_enqueue_files();
     if (isset($result[\'css\']) && is_array($result[\'css\'])) {
         $faVersion = ($result[\'faVersion\'] ?? false);
-        foreach ($result[\'css\'] as $css) {
-            wp_enqueue_style(\'myplugin_fontawesome\', $css, [], $faVersion);
+        foreach ($result[\'css\'] as $index => $css) {
+            wp_enqueue_style(\'myplugin_fontawesome_\' . $index, $css, [], $faVersion);
         }
-        unset($css, $faVersion);
+        unset($css, $faVersion, $index);
     }
 }';
                                 esc_html_e($codeManualEnqueue);

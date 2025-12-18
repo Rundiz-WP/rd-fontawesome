@@ -2,7 +2,7 @@
 Contributors: okvee
 Tags: fontawesome, font awesome, icons
 Requires at least: 5.0
-Tested up to: 6.9
+Tested up to: 7.0
 Stable tag: 1.0.5
 Requires PHP: 7.0
 License: MIT
@@ -27,10 +27,12 @@ if (function_exists('rdfontawesome_get_enqueue_files')) {
     $result = rdfontawesome_get_enqueue_files();
     if (isset($result['css']) && is_array($result['css'])) {
         $faVersion = ($result['faVersion'] ?? false);
+        $i = 1;
         foreach ($result['css'] as $css) {
-            wp_enqueue_style('myplugin_fontawesome', $css, [], $faVersion);
+            wp_enqueue_style('myplugin_fontawesome_' . $i, $css, [], $faVersion);
+            ++$i;
         }
-        unset($css, $faVersion);
+        unset($css, $faVersion, $i);
     }
 }
 </pre>
@@ -41,6 +43,8 @@ if (function_exists('rdfontawesome_get_public_url_base')) {
     echo rdfontawesome_get_public_url_base();
 }
 </pre>
+
+Tested up to PHP 8.5.
 
 Font Awesome files are belong to https://fontawesome.com
 
