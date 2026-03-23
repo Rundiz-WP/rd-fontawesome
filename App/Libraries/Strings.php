@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Libraries;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Strings')) {
+    /**
+     * Strings class.
+     */
     class Strings
     {
 
@@ -19,7 +22,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Strings')) {
         /**
          * Normalize handles string by reformat xx, yyy ,  zzz to be xxx,yyy,zzz.
          * 
-         * @param string $handles
+         * @param string $handles The asset handles.
          * @return string
          */
         public function normalizeHandlesString(string $handles): string
@@ -29,5 +32,5 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Strings')) {
         }// normalizeHandlesString
 
 
-    }
+    }// Strings
 }

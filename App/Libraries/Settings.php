@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Libraries;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Settings')) {
+    /**
+     * Settings class.
+     */
     class Settings
     {
 
@@ -67,7 +70,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Settings')) {
                 $settings['last_update'] = get_date_from_gmt(gmdate('Y-m-d H:i:s'));
             }
             if (!array_key_exists('last_update_gmt', $settings)) {
-                $settings['last_update_gmt'] = gmdate('Y-m-d H:i:s');;
+                $settings['last_update_gmt'] = gmdate('Y-m-d H:i:s');
             }
 
             $allSettings = array_merge($allSettings, $settings);

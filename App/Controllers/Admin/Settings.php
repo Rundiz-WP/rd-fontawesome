@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Controllers\Admin;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
+    /**
+     * Settings class.
+     */
     class Settings extends \RdFontAwesome\App\Controllers\BaseController
     {
 
@@ -21,15 +24,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
          */
         public function enqueueScriptsStyles()
         {
-            $pluginData = get_plugin_data(RDFONTAWESOME_FILE);
-            $pluginVersion = ($pluginData['Version'] ?? false);
-            unset($pluginData);
-
             // enqueue style.
-            wp_enqueue_style('rd-fontawesome-settings', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/css/admin/settings.css', [], $pluginVersion);
+            wp_enqueue_style('rd-fontawesome-settings', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/css/admin/settings.css', [], RDFONTAWESOME_VERSION);
 
             // enqueue script.
-            wp_register_script('rd-fontawesome-settings', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/js/admin/settings.js', ['jquery'], $pluginVersion, true);
+            wp_register_script('rd-fontawesome-settings', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/js/admin/settings.js', ['jquery'], RDFONTAWESOME_VERSION, true);
             wp_localize_script(
                 'rd-fontawesome-settings',
                 'RdFontAwesomeSettingsObject', 
@@ -69,9 +68,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
             $output['wpVersion'] = $wp_version;
 
             // plugin version.
-            $pluginData = get_plugin_data(RDFONTAWESOME_FILE);
-            $output['pluginVersion'] = ($pluginData['Version'] ?? false);
-            unset($pluginData);
+            $output['pluginVersion'] = RDFONTAWESOME_VERSION;
             // paths writable.
             $pathsToCheck = [
                 WP_CONTENT_DIR . '/uploads',
@@ -117,7 +114,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
         {
             // check permission.
             if (!current_user_can('manage_options')) {
-                wp_die(__('You do not have permission to access this page.'));
+                wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
@@ -133,11 +130,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
                 $output['settings']['major_version'] = ($this->getStaticPluginData())['defaultMajorVersion'];
             }
 
-            // if form submitted
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
             if (isset($_POST) && !empty($_POST)) {
                 // if method POST.
                 // save via AJAX only, this process should just die.
-                wp_die(__('Invalid request.', 'rd-fontawesome'));
+                wp_die(esc_html__('Invalid request.', 'rd-fontawesome'));
                 exit();
             }// endif $_POST
 

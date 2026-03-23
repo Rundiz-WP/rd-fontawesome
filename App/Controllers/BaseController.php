@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Controllers;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Controllers\\BaseController')) {
+    /**
+     * Base controller class.
+     */
     abstract class BaseController implements ControllerInterface
     {
 
@@ -22,14 +25,14 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\BaseController')) {
         /**
          * Magic set.
          * 
-         * @param string $name
-         * @param mixed $value
+         * @param string $name Property name.
+         * @param mixed $value Property value.
          */
         public function __set(string $name, $value)
         {
             $allowedNames = ['Loader'];
 
-            if (in_array($name, $allowedNames) && property_exists($this, $name)) {
+            if (in_array($name, $allowedNames, true) && property_exists($this, $name)) {
                 $this->{$name} = $value;
             }
         }// __set

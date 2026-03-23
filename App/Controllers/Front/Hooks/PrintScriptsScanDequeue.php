@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Controllers\Front\Hooks;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\PrintScriptsScanDequeue')) {
+    /**
+     * Class to print script that will be scan for dequeue.
+     */
     class PrintScriptsScanDequeue extends \RdFontAwesome\App\Controllers\BaseController
     {
 
@@ -24,6 +27,8 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\PrintScripts
             if (get_transient($this->scanDequeueTransientName) === 'true' && !is_admin()) {
                 // if there is a task to scan dequeue handles and not in admin pages.
                 $nonceValue = get_transient('rd-fontawesome-nonce');
+                // already verify nonce with `===`.
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 if (isset($_REQUEST['nonce']) && $_REQUEST['nonce'] === $nonceValue) {
                     // if nonce matched.
                     delete_transient('rd-fontawesome-nonce');
@@ -40,9 +45,9 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\PrintScripts
         public function scanDequeueHandles()
         {
             $didScan = get_transient($this->scanDequeueDidScannedTransientName);
-            if ($didScan === 'true') {
+            if ('true' === $didScan) {
                 // if already scanned, no need to do it again. let user back to admin page and check the result.
-                return ;
+                return;
             }
             unset($didScan);
 
@@ -50,7 +55,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\PrintScripts
             if (false === $handles || empty($handles)) {
                 // if handle names to scan is not found.
                 delete_transient($this->scanDequeueHandlesTransientName);
-                return ;
+                return;
             }
             list($cssHandles, $jsHandles) = json_decode($handles);
             unset($handles);
@@ -62,11 +67,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\PrintScripts
             unset($FAScan);
 
             set_transient($this->scanDequeueDidScannedTransientName, 'true', $this->scanDequeueTransientExpires);
-            set_transient($this->scanDequeueHandlesResultTransientName, json_encode([$cssHandles, $jsHandles]), $this->scanDequeueTransientExpires);
+            set_transient($this->scanDequeueHandlesResultTransientName, wp_json_encode([$cssHandles, $jsHandles]), $this->scanDequeueTransientExpires);
             set_transient($this->scanDequeueHandlesHashedResultTransientName, $hashed, $this->scanDequeueTransientExpires);
             unset($cssHandles, $hashed, $jsHandles);
 
-            wp_register_script('rd-fontawesome-frontscandequeue', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/js/front/scan-dequeue.js', [], false, true);
+            wp_register_script('rd-fontawesome-frontscandequeue', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/js/front/scan-dequeue.js', [], RDFONTAWESOME_VERSION, true);
             wp_localize_script(
                 'rd-fontawesome-frontscandequeue',
                 'RdFontAwesomeFrontScanDequeueObj',

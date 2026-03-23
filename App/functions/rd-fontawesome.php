@@ -8,6 +8,11 @@
  */
 
 
+if (!defined('ABSPATH')) {
+    exit();
+}
+
+
 if (!function_exists('rdfontawesome_get_enqueue_files')) {
     /**
      * Get Font Awesome asset files that will be use for enqueue manually.

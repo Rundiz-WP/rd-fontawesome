@@ -27,5 +27,5 @@ if (!interface_exists('\\RdFontAwesome\\App\\Controllers\\ControllerInterface'))
         public function registerHooks();
 
 
-    }
+    }// ControllerInterface
 }

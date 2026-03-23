@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Controllers\Admin;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
+    /**
+     * Settings AJAX class.
+     */
     class SettingsAjax extends \RdFontAwesome\App\Controllers\BaseController
     {
 
@@ -39,7 +42,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         protected function inputMajorVersion(): int
         {
             $major_version = (int) sanitize_text_field(filter_input(INPUT_POST, 'major_version', FILTER_SANITIZE_NUMBER_INT));
-            if (!in_array($major_version, ($this->getStaticPluginData())['majorVersions'])) {
+            if (!in_array($major_version, ($this->getStaticPluginData())['majorVersions'], true)) {
                 // if selected major version is not in the list.
                 // use default.
                 $major_version = ($this->getStaticPluginData())['defaultMajorVersion'];
@@ -55,7 +58,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         {
             // check permission.
             if (!current_user_can('manage_options')) {
-                wp_die(__('You do not have permission to access this page.'));
+                wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
@@ -86,7 +89,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                 !empty($latestVersion) &&
                 (
                     !isset($limitExceeded) ||
-                    $limitExceeded !== true
+                    true !== $limitExceeded
                 )
             ) {
                 // if found download link and latest version info and not GitHub API limit exceeded.
@@ -202,7 +205,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         {
             // check permission.
             if (!current_user_can('manage_options')) {
-                wp_die(__('You do not have permission to access this page.'));
+                wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
@@ -234,7 +237,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         {
             // check permission.
             if (!current_user_can('manage_options')) {
-                wp_die(__('You do not have permission to access this page.'));
+                wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
@@ -247,7 +250,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
             $data['major_version'] = $this->inputMajorVersion();
             $data['dequeue_css'] = sanitize_text_field(filter_input(INPUT_POST, 'dequeue_css'));
             $data['dequeue_js'] = sanitize_text_field(filter_input(INPUT_POST, 'dequeue_js'));
-            $data['donot_enqueue'] = (isset($_POST['donot_enqueue']) && $_POST['donot_enqueue'] === '1' ? '1' : '0');
+            $data['donot_enqueue'] = (isset($_POST['donot_enqueue']) && '1' === $_POST['donot_enqueue'] ? '1' : '0');
 
             // nromalize handles. (xx, yy to be xx,yy)
             $Strings = new \RdFontAwesome\App\Libraries\Strings();
@@ -263,15 +266,15 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                     !empty($data['dequeue_css']) || 
                     !empty($data['dequeue_js'])
                 ) &&
-                $didScanned !== 'true'
+                'true' !== $didScanned
             ) {
                 // if (dequeue CSS or JS has value) and did not scanned yet.
                 // set task to scan.
                 set_transient($this->scanDequeueTransientName, 'true', $this->scanDequeueTransientExpires);
                 // set handle names to scan.
-                set_transient($this->scanDequeueHandlesTransientName, json_encode([$data['dequeue_css'], $data['dequeue_js']]), $this->scanDequeueTransientExpires);
+                set_transient($this->scanDequeueHandlesTransientName, wp_json_encode([$data['dequeue_css'], $data['dequeue_js']]), $this->scanDequeueTransientExpires);
                 // set custom nonce for use in front-end. WordPress don't have nonce functions supported in front end.
-                $nonceValue = (string) mt_rand(111, 9999) . uniqid();
+                $nonceValue = (string) wp_rand(111, 9999) . uniqid();
                 set_transient('rd-fontawesome-nonce', $nonceValue, $this->scanDequeueTransientExpires);
                 // tell user to open front pages to scan.
                 $pendingScan = true;
@@ -288,7 +291,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
                 unset($nonceValue);
             }
 
-            if (isset($didScanned) && $didScanned === 'true') {
+            if (isset($didScanned) && 'true' === $didScanned) {
                 // if already scanned. check if the left handles are matched.
                 $handleNames = json_decode(get_transient($this->scanDequeueHandlesTransientName));
                 $handleNamesResult = json_decode(get_transient($this->scanDequeueHandlesResultTransientName));
@@ -350,16 +353,16 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
             }
             unset($didScanned);
 
-            if (isset($pendingScan) && $pendingScan === false) {
+            if (isset($pendingScan) && false === $pendingScan) {
                 // if no pending scan, save the data.
                 $Settings = new \RdFontAwesome\App\Libraries\Settings();
                 $Settings->saveSettings($data);
                 unset($data, $Settings);
 
-                if (isset($allPassed) && $allPassed === true) {
+                if (isset($allPassed) && true === $allPassed) {
                     $output['formResult'] = 'success';
                     $output['formResultMessage'] = [
-                        __('Saved successfully.', 'rd-fontawesome'),
+                        esc_html__('Saved successfully.', 'rd-fontawesome'),
                     ];
                 }
             }
@@ -376,7 +379,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         {
             // check permission.
             if (!current_user_can('manage_options')) {
-                wp_die(__('You do not have permission to access this page.'));
+                wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
@@ -385,7 +388,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
             $personalToken = sanitize_text_field(filter_input(INPUT_POST, 'ghpersonalaccesstoken'));
 
             $output['testResult'] = $this->Url->testPersonalAccessToken($personalToken);
-            if ($output['testResult']['success'] === true) {
+            if (true === $output['testResult']['success']) {
                 $output['formResult'] = 'success';
                 $output['formResultMessage'] = [
                     __('Success!', 'rd-fontawesome'),
@@ -411,7 +414,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         {
             // check permission.
             if (!current_user_can('manage_options')) {
-                wp_die(__('You do not have permission to access this page.'));
+                wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 

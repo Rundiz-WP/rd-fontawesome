@@ -12,7 +12,14 @@
  * License URI: https://opensource.org/licenses/MIT
  * Text Domain: rd-fontawesome
  * Domain Path: /App/languages
+ * 
+ * @package rd-fontawesome
  */
+
+
+if (!defined('ABSPATH')) {
+    exit();
+}
 
 
 // define this plugin main file path.
@@ -21,11 +28,23 @@ if (!defined('RDFONTAWESOME_FILE')) {
 }
 
 
+if (!defined('RDFONTAWESOME_VERSION')) {
+    // if not defined constant version.
+    $rd_fontawesome_pluginData = (function_exists('get_file_data') ? get_file_data(__FILE__, ['Version' => 'Version']) : null);
+    $rd_fontawesome_pluginVersion = (isset($rd_fontawesome_pluginData['Version']) ? $rd_fontawesome_pluginData['Version'] : date('Ym')); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+    unset($rd_fontawesome_pluginData);
+
+    define('RDFONTAWESOME_VERSION', $rd_fontawesome_pluginVersion);
+
+    unset($rd_fontawesome_pluginVersion);
+}
+
+
 // include this plugin's autoload.
-require __DIR__.'/autoload.php';
+require __DIR__ . '/autoload.php';
 
 
 // initialize plugin app main class.
-$this_plugin_app = new \RdFontAwesome\App\App();
-$this_plugin_app->run();
-unset($this_plugin_app);
+$rd_fontawesome_App = new \RdFontAwesome\App\App();
+$rd_fontawesome_App->run();
+unset($rd_fontawesome_App);

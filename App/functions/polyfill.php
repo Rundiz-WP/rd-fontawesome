@@ -8,16 +8,21 @@
  */
 
 
+if (!defined('ABSPATH')) {
+    exit();
+}
+
+
 if (!function_exists('array_key_first')) {
     /**
      * @link https://www.php.net/manual/en/function.array-key-first.php Original source code.
-     * @param array $arr
+     * @param array $arr An array.
      * @return mixed
      */
     function array_key_first(array $arr) {
-        foreach($arr as $key => $unused) {
+        foreach ($arr as $key => $unused) {
             return $key;
         }
-        return NULL;
-    }
+        return null;
+    }// array_key_first
 }

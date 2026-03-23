@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Controllers\Front\Hooks;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDequeue')) {
+    /**
+     * Enqueue/dequeue class.
+     */
     class EnqueueDequeue extends \RdFontAwesome\App\Controllers\BaseController
     {
 
@@ -42,7 +45,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
                 list($newHashCss, $newHashJs) = $FAScan->setHashNames($allSettings['dequeue_css'], $allSettings['dequeue_js']);
                 if ($newHashJs !== $allSettings['dequeue_hashed'][1]) {
                     // if hashed check and saved mismatched. do not dequeue.
-                    return ;
+                    return;
                 }
                 unset($FAScan, $newHashCss, $newHashJs);
 
@@ -68,7 +71,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
                 list($newHashCss, $newHashJs) = $FAScan->setHashNames($allSettings['dequeue_css'], $allSettings['dequeue_js']);
                 if ($newHashCss !== $allSettings['dequeue_hashed'][0]) {
                     // if hashed check and saved mismatched. do not dequeue.
-                    return ;
+                    return;
                 }
                 unset($FAScan, $newHashCss, $newHashJs);
 
@@ -89,11 +92,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
         {
             $allSettings = $this->getSettings();
 
-            if (!isset($allSettings['donot_enqueue']) || $allSettings['donot_enqueue'] !== '1') {
+            if (!isset($allSettings['donot_enqueue']) || '1' !== $allSettings['donot_enqueue']) {
                 $faVersion = ($allSettings['fontawesome_version'] ?? false);
                 if (false === $faVersion) {
                     // if not yet installed.
-                    return ;
+                    return;
                 }
 
                 $majorVersion = ($allSettings['major_version'] ?? ($this->getStaticPluginData())['defaultMajorVersion']);
@@ -105,7 +108,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
                     $i = 0;
                     foreach ($asset['css'] as $css) {
                         wp_enqueue_style('rd-fontawesome' . ($i > 0 ? $i : ''), $css, [], $faVersion);
-                        $i++;
+                        ++$i;
                     }// endforeach;
                     unset($css, $i);
                 }
@@ -128,7 +131,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Front\\Hooks\\EnqueueDeque
             if (isset($allSettings['dequeue_js']) && !empty($allSettings['dequeue_js'])) {
                 add_action('wp_enqueue_scripts', [$this, 'dequeueScripts'], 100);
             }
-            if ((!isset($allSettings['donot_enqueue']) || $allSettings['donot_enqueue'] !== '1') && !empty($allSettings)) {
+            if ((!isset($allSettings['donot_enqueue']) || '1' !== $allSettings['donot_enqueue']) && !empty($allSettings)) {
                 add_action('wp_enqueue_scripts', [$this, 'enqueueAssets']);
             }
             unset($allSettings);

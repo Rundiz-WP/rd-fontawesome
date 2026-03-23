@@ -1,9 +1,24 @@
+<?php
+/**
+ * Settings view file.
+ * 
+ * @package rd-fontawesome
+ * 
+ * phpcs:disable Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace
+ */
+
+
+if (!defined('ABSPATH')) {
+    exit();
+}
+
+?>
 <div id="rd-fontawesome-form-result-placeholder"></div>
 
 <form id="rd-fontawesome-settings-form" method="post">
     <div class="rd-fontawesome-tabs-container">
         <div class="rd-fontawesome-tabs">
-            <a class="rd-fontawesome-tab active" href="#rd-fontawesome-tab-settings"><?php esc_html_e('Settings'); ?></a>
+            <a class="rd-fontawesome-tab active" href="#rd-fontawesome-tab-settings"><?php esc_html_e('Settings', 'rd-fontawesome'); ?></a>
             <a class="rd-fontawesome-tab" href="#rd-fontawesome-tab-svinfo"><?php esc_html_e('Server info', 'rd-fontawesome'); ?></a>
         </div><!--.rd-fontawesome-tabs-->
         <div class="rd-fontawesome-tabs-content">
@@ -16,14 +31,14 @@
                                 <select id="rd-fontawesome-major_version" name="major_version">
                                     <?php
                                     if (isset($allMajorVersions) && is_array($allMajorVersions)) {
-                                        foreach ($allMajorVersions as $version) {
-                                            echo '<option value="' . esc_attr($version) . '"';
-                                            if (isset($settings['major_version']) && strval($settings['major_version']) === strval($version)) {
+                                        foreach ($allMajorVersions as $rd_fontawesome_version) {
+                                            echo '<option value="' . esc_attr($rd_fontawesome_version) . '"';
+                                            if (isset($settings['major_version']) && strval($settings['major_version']) === strval($rd_fontawesome_version)) {
                                                 echo ' selected';
                                             }
-                                            echo '>' . esc_attr($version) . '</option>' . PHP_EOL;
+                                            echo '>' . esc_attr($rd_fontawesome_version) . '</option>' . PHP_EOL;
                                         }// endforeach;
-                                        unset($version);
+                                        unset($rd_fontawesome_version);
                                     }
                                     unset($allMajorVersions);
                                     ?> 
@@ -33,7 +48,7 @@
                         <tr>
                             <th scope="row"><?php esc_html_e('GitHub personal access token', 'rd-fontawesome'); ?></th>
                             <td>
-                                <input id="rd-fontawesome-ghpersonalaccesstoken" type="text" name="ghpersonalaccesstoken" value="<?php esc_attr_e(($settings['ghpersonalaccesstoken'] ?? '')); ?>" autocomplete="off" placeholder="user:token">
+                                <input id="rd-fontawesome-ghpersonalaccesstoken" type="text" name="ghpersonalaccesstoken" value="<?php echo esc_attr(($settings['ghpersonalaccesstoken'] ?? '')); ?>" autocomplete="off" placeholder="user:token">
                                 <button id="rd-fontawesome-test-ghpersonalaccesstoken" class="button" type="button"><?php esc_html_e('Test token', 'rd-fontawesome'); ?></button>
                                 <span id="rd-fontawesome-test-ghpersonalaccesstoken-result"></span>
                                 <p class="description"><?php 
@@ -76,7 +91,7 @@
                         <tr>
                             <th scope="row"><?php esc_html_e('Installed Font Awesome version', 'rd-fontawesome'); ?></th>
                             <td>
-                                <p id="rd-fontawesome-currentversion"><?php esc_html_e(($settings['fontawesome_version'] ?? '-')); ?></p>
+                                <p id="rd-fontawesome-currentversion"><?php echo esc_html(($settings['fontawesome_version'] ?? '-')); ?></p>
                                 <button id="rd-fontawesome-install-latestversion-btn" class="button" type="button"><?php esc_html_e('Install latest version', 'rd-fontawesome'); ?></button>
                                 <button id="rd-fontawesome-delete-installed-btn" class="button button-danger" type="button"><?php esc_html_e('Uninstall Font Awesome', 'rd-fontawesome'); ?></button>
                                 <p class="description"><?php esc_html_e('This will be use latest minor version of selected major version.', 'rd-fontawesome'); ?></p>
@@ -85,7 +100,7 @@
                         <tr>
                             <th scope="row"><?php esc_html_e('Unload enqueued CSS handles', 'rd-fontawesome'); ?></th>
                             <td>
-                                <input id="rd-fontawesome-dequeue-css" class="regular-text" type="text" name="dequeue_css" value="<?php esc_attr_e(($settings['dequeue_css'] ?? '')); ?>">
+                                <input id="rd-fontawesome-dequeue-css" class="regular-text" type="text" name="dequeue_css" value="<?php echo esc_attr(($settings['dequeue_css'] ?? '')); ?>">
                                 <p class="description">
                                     <?php 
                                     esc_html_e('Dequeue the other Font Awesome CSS handles that was enqueued by other plugins or themes.', 'rd-fontawesome');
@@ -93,7 +108,7 @@
                                     esc_html_e('This affects only the front pages.', 'rd-fontawesome');
                                     echo ' ';
                                     /* translators: %1$s comma sign. */
-                                    printf(__('Separate values by %1$s.', 'rd-fontawesome'), '<code>,</code>'); 
+                                    printf(esc_html__('Separate values by %1$s.', 'rd-fontawesome'), '<code>,</code>'); 
                                     ?> 
                                 </p>
                             </td>
@@ -101,14 +116,14 @@
                         <tr>
                             <th scope="row"><?php esc_html_e('Unload enqueued JS handles', 'rd-fontawesome'); ?></th>
                             <td>
-                                <input id="rd-fontawesome-dequeue-js" class="regular-text" type="text" name="dequeue_js" value="<?php esc_attr_e(($settings['dequeue_js'] ?? '')); ?>">
+                                <input id="rd-fontawesome-dequeue-js" class="regular-text" type="text" name="dequeue_js" value="<?php echo esc_attr(($settings['dequeue_js'] ?? '')); ?>">
                                 <p class="description">
                                     <?php esc_html_e('Dequeue the  other Font Awesome JavaScript handles that was enqueued by other plugins or themes.', 'rd-fontawesome'); 
                                     echo ' ';
                                     esc_html_e('This affects only the front pages.', 'rd-fontawesome');
                                     echo ' ';
                                     /* translators: %1$s comma sign. */
-                                    printf(__('Separate values by %1$s.', 'rd-fontawesome'), '<code>,</code>'); 
+                                    printf(esc_html__('Separate values by %1$s.', 'rd-fontawesome'), '<code>,</code>'); 
                                     ?> 
                                 </p>
                             </td>
@@ -116,14 +131,14 @@
                         <tr>
                             <th scope="row"><label for="rd-fontawesome-dontenqueue"><?php esc_html_e('Do not enqueue assets', 'rd-fontawesome'); ?></label></th>
                             <td>
-                                <input id="rd-fontawesome-dontenqueue" type="checkbox" name="donot_enqueue" value="1"<?php if (isset($settings['donot_enqueue']) && $settings['donot_enqueue'] === '1') {echo ' checked';} ?>>
+                                <input id="rd-fontawesome-dontenqueue" type="checkbox" name="donot_enqueue" value="1"<?php if (isset($settings['donot_enqueue']) && '1' === $settings['donot_enqueue']) {echo ' checked';} ?>>
                                 <p class="description">
                                     <?php esc_html_e('Check this box to do not enqueue assets for this plugin.', 'rd-fontawesome'); ?> 
                                     <?php esc_html_e('The assets for this plugin such as CSS, fonts won\'t be loaded on the front pages.', 'rd-fontawesome'); ?> 
                                 </p>
                                 <p class="description"><?php esc_html_e('You can manually enqueue asset files by use the code below.', 'rd-fontawesome'); ?></p>
                                 <pre><?php 
-                                $codeManualEnqueue = 'if (function_exists(\'rdfontawesome_get_enqueue_files\')) {
+                                $rd_fontawesome_codeManualEnqueue = 'if (function_exists(\'rdfontawesome_get_enqueue_files\')) {
     $result = rdfontawesome_get_enqueue_files();
     if (isset($result[\'css\']) && is_array($result[\'css\'])) {
         $faVersion = ($result[\'faVersion\'] ?? false);
@@ -133,15 +148,15 @@
         unset($css, $faVersion, $index);
     }
 }';
-                                esc_html_e($codeManualEnqueue);
-                                unset($codeManualEnqueue);
+                                echo esc_html($rd_fontawesome_codeManualEnqueue);
+                                unset($rd_fontawesome_codeManualEnqueue);
                                 ?></pre>
                             </td>
                         </tr>
                     </tbody>
                 </table><!--.form-table-->
                 <p class="submit">
-                    <button id="rd-fontawesome-settings-submit" class="button button-primary" type="submit"><?php esc_html_e('Save Changes'); ?></button> 
+                    <button id="rd-fontawesome-settings-submit" class="button button-primary" type="submit"><?php esc_html_e('Save Changes', 'rd-fontawesome'); ?></button> 
                     <span id="rd-fontawesome-settings-submit-resultmessage"></span>
                 </p>
             </div><!--#rd-fontawesome-tab-settings-->

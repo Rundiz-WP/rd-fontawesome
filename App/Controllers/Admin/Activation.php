@@ -2,7 +2,7 @@
 /**
  * Activation class is the class that will be working on activate, deactivate, delete WordPress plugin.
  * 
- * @package rundiz-oauth
+ * @package rd-fontawesome
  * @license http://opensource.org/licenses/MIT MIT
  * @since 1.0.0
  */
@@ -12,12 +12,15 @@ namespace RdFontAwesome\App\Controllers\Admin;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Activation')) {
+    /**
+     * Activation class.
+     */
     class Activation extends \RdFontAwesome\App\Controllers\BaseController
     {
 
 
         /**
-         * add links to plugin actions area
+         * Add links to plugin actions area.
          * 
          * @param array $actions current plugin actions. (including deactivate, edit).
          * @param string $plugin_file the plugin file for checking.
@@ -31,8 +34,8 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Activation')) {
                 $plugin = plugin_basename(RDFONTAWESOME_FILE);
             }
             
-            if ($plugin == $plugin_file) {
-                $link['settings'] = '<a href="'.  esc_url(get_admin_url(null, 'options-general.php?page=rd-fontawesome-settings')).'">'.__('Settings').'</a>';
+            if ($plugin === $plugin_file) {
+                $link['settings'] = '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=rd-fontawesome-settings')) . '">' . __('Settings', 'rd-fontawesome') . '</a>';
                 $actions = array_merge($link, $actions);
             }
             
@@ -85,7 +88,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Activation')) {
 
 
         /**
-         * delete the plugin.
+         * Delete the plugin.
          * 
          * @global \wpdb $wpdb
          * @global \WP_Filesystem_Base $wp_filesystem
@@ -106,5 +109,5 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Activation')) {
         }// uninstall
 
 
-    }
+    }// Activation
 }

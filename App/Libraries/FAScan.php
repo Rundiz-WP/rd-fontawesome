@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Libraries;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
+    /**
+     * Font Awesome scan class.
+     */
     class FAScan
     {
 
@@ -33,12 +36,11 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
          */
         public function doScan(string $handles, string $assetType = 'css'): string
         {
-            if ($handles === '' || is_null($handles)) {
+            if ('' === $handles || is_null($handles)) {
                 // if handles are empty.
                 // return as-is and don't waste server resource for checking.
                 return $handles;
             }
-
 
             $expHandles = explode(',', $handles);
             $expHandles = $this->makeHandlesUnique($expHandles);
@@ -47,7 +49,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
             foreach ($expHandles as $index => $handle) {
                 $handle = trim($handle);
 
-                if ($handle === 'rd-fontawesome') {
+                if ('rd-fontawesome' === $handle) {
                     // if the handle is matched this plugin.
                     // remove it.
                     unset($expHandles[$index]);
@@ -80,7 +82,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
 
                         // in case that checked with the content but not found.
                         // check with the handle name. -----
-                        if (in_array(strtolower($assetFile), static::SEARCH_FA_KEYWORDS)) {
+                        if (in_array(strtolower($assetFile), static::SEARCH_FA_KEYWORDS, true)) {
                             // if found in handle name.
                             $found = true;
                             unset($assetFile);
@@ -113,7 +115,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
          * 
          * This method was called from `doScan()`.
          * 
-         * @param string $assetFile
+         * @param string $assetFile Asset file
          * @return string|null Return string of contents or `null` if unable to get asset's content.
          */
         protected function getAssetContents(string $assetFile)
@@ -133,7 +135,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
                     $assetContents = file_get_contents(ABSPATH . $assetFile);
                 } elseif (is_file($assetFile)) {
                     // if the asset file itself exists, this means it is full path.
-                    $assetContents = file_get_contents($assetFile);
+                    $assetContents = file_get_contents($assetFile);// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
                 }
             }// endif check asset file path is URL or relative or full path.
 
@@ -179,7 +181,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
          * 
          * This method was called from `doScan()`.
          * 
-         * @param array $handles
+         * @param array $handles Asset handles.
          * @return array
          */
         protected function makeHandlesUnique(array $handles): array
@@ -195,7 +197,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\FAScan')) {
          * 
          * This method was called from `doScan()`.
          * 
-         * @param string $contents
+         * @param string $contents Page contents.
          * @return bool Return `true` if found one of keywords, `false` for otherwise.
          */
         protected function scanContents(string $contents): bool

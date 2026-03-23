@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Libraries;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Loader')) {
+    /**
+     * Loader class.
+     */
     class Loader
     {
 
@@ -90,12 +93,12 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Loader')) {
             $view_dir = dirname(__DIR__) . '/Views/';
 
             if (
-                $view_name != null && 
+                '' !== $view_name &&
                 is_file($view_dir . $view_name . '.php')
             ) {
-                extract($data, EXTR_PREFIX_SAME, 'dupvar_');
+                extract($data, EXTR_PREFIX_SAME, 'dupvar_');// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
-                if ($require_once === true) {
+                if (true === $require_once) {
                     include_once $view_dir . $view_name . '.php';
                 } else {
                     include $view_dir . $view_name . '.php';

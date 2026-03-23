@@ -12,6 +12,9 @@ namespace RdFontAwesome\App\Libraries;
 
 
 if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
+    /**
+     * URL class.
+     */
     class Url
     {
 
@@ -54,7 +57,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
         /**
          * Magic get
          * 
-         * @param string $name
+         * @param string $name Property name.
          * @return mixed
          */
         public function __get(string $name)
@@ -79,7 +82,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                 $args['headers'] = [];
             }
 
-            $args['headers']['Authorization'] = 'Basic ' . base64_encode($personalToken);
+            $args['headers']['Authorization'] = 'Basic ' . base64_encode($personalToken);// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode
 
             return $args;
         }// buildPersonalAccessTokenHeader
@@ -204,7 +207,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
         /**
          * Get required assets to enqueue.
          * 
-         * @param int $majorVersion
+         * @param int $majorVersion Major version.
          * @return array Return associative array with key:<br>
          *      `css` (array) The list of CSS files.<br>
          *      If not found any condition matched major version then return empty array.
@@ -270,7 +273,9 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
             $results = [];
             $movedSuccess = [];
             foreach ($moveFiles as $moveFile) {
+                // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
                 $result = rename($this->tempDir . '/' . $newVersionDir . '/' . $moveFile, $targetPublishDir . '/' . $moveFile);
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_export
                 $results[$this->tempDir . '/' . $newVersionDir . '/' . $moveFile] = var_export($result, true);
                 if (true === $result) {
                     $movedSuccess[] = $moveFile;
@@ -361,7 +366,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
             $iterationCount = 0;
 
             do {
-                $iterationCount++;
+                ++$iterationCount;
                 $response = wp_remote_get($url . '&page=' . $iterationCount, $args);
                 $responseCode = (int) wp_remote_retrieve_response_code($response);
                 $headerLink = wp_remote_retrieve_header($response, 'link');
@@ -409,8 +414,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                     // if request failed.
                     $endLoop = true;
                 }// endif body is array.
-
-            } while ($endLoop === false);
+            } while (false === $endLoop);
             unset($args, $body, $endLoop, $headerLink, $responseCode, $url);
 
             $output['tagVersion'] = $maxTag;
@@ -420,7 +424,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
             $output['matchedMinorVersions'] = $matchedMinorVersions;
             unset($iterationCount, $matchedMinorVersions, $maxTag, $maxTagZipUrl);
 
-            if ($majorVersion > 4 && $maxOriginalTag !== '0') {
+            if ($majorVersion > 4 && '0' !== $maxOriginalTag) {
                 // if major version > 4 and at least found a tag.
                 // get release data to retrieve manual uploaded asset.
                 $url = $this->data['githubURLs']['releastByTagAPIURL'] . '/' . $maxOriginalTag;
@@ -615,6 +619,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
                 $this->downloadResult['move']['failedValidatedMove'] = $results;
 
                 // it's PHP error, show in the log, no need to translate.
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions, WordPress.Security.EscapeOutput.OutputNotEscaped
                 trigger_error(sprintf('Unable to move some files (%s)', var_export($results, true)), E_USER_WARNING);
             }
 
@@ -623,5 +628,5 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Url')) {
         }// validateMovedFiles
 
 
-    }
+    }// Url
 }
