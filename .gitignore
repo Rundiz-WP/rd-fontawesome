@@ -1,2 +1,5 @@
+/.backup
+/.dist
 /.temparchive
 /assets/vendor/fontawesome
+/node_modules
