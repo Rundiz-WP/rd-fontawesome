@@ -20,6 +20,20 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
 
 
         /**
+         * @since 1.0.8
+         * @var string AJAX nonce name. This class constant visibility must be public.
+         */
+        const AJAX_NONCE = 'rdfontawesome_ajaxnonce';
+
+
+        /**
+         * @since 1.0.8
+         * @var string Main capability for check with most AJAX calls. This class constant visibility can be private.
+         */
+        const MAIN_CAPABILITY = 'manage_options';
+
+
+        /**
          * @var \\RdFontAwesome\\App\\Libraries\\Url
          */
         protected $Url;
@@ -57,13 +71,13 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         public function installLatestFAVersion()
         {
             // check permission.
-            if (!current_user_can('manage_options')) {
+            if (!current_user_can(static::MAIN_CAPABILITY)) {
                 wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
             $output = [];
-            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+            check_ajax_referer(static::AJAX_NONCE, 'nonce');
             $personalToken = sanitize_text_field(filter_input(INPUT_POST, 'ghpersonalaccesstoken'));
             $major_version = $this->inputMajorVersion();
 
@@ -204,13 +218,13 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         public function retrieveLatestFAVersion()
         {
             // check permission.
-            if (!current_user_can('manage_options')) {
+            if (!current_user_can(static::MAIN_CAPABILITY)) {
                 wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
             $output = [];
-            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+            check_ajax_referer(static::AJAX_NONCE, 'nonce');
             $personalToken = sanitize_text_field(filter_input(INPUT_POST, 'ghpersonalaccesstoken'));
             $major_version = $this->inputMajorVersion();
 
@@ -236,13 +250,13 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         public function saveSettings()
         {
             // check permission.
-            if (!current_user_can('manage_options')) {
+            if (!current_user_can(static::MAIN_CAPABILITY)) {
                 wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
             $output = [];
-            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+            check_ajax_referer(static::AJAX_NONCE, 'nonce');
 
             // prepare input for save in settings.
             $data = [];
@@ -378,13 +392,13 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         public function testPersonalAccessToken()
         {
             // check permission.
-            if (!current_user_can('manage_options')) {
+            if (!current_user_can(static::MAIN_CAPABILITY)) {
                 wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
             $output = [];
-            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+            check_ajax_referer(static::AJAX_NONCE, 'nonce');
             $personalToken = sanitize_text_field(filter_input(INPUT_POST, 'ghpersonalaccesstoken'));
 
             $output['testResult'] = $this->Url->testPersonalAccessToken($personalToken);
@@ -413,13 +427,13 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\SettingsAjax')) {
         public function uninstallFA()
         {
             // check permission.
-            if (!current_user_can('manage_options')) {
+            if (!current_user_can(static::MAIN_CAPABILITY)) {
                 wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
                 exit();
             }
 
             $output = [];
-            check_ajax_referer('rdfontawesome_ajaxnonce', 'nonce');
+            check_ajax_referer(static::AJAX_NONCE, 'nonce');
 
             global $wp_filesystem;
             WP_Filesystem();
