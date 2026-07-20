@@ -2,4 +2,12 @@
 /.dist
 /.temparchive
 /assets/vendor/fontawesome
-/node_modules
+/node_modules/
+
+# Eclipse ignore files.
+/.settings/
+/.buildpath
+/.project
+
+# Visual Studio Code file.
+/.vscode/

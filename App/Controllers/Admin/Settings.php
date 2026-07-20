@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings page.
+ * Add settings sub menu and page into the Settings menu.
  * 
  * @package rd-fontawesome
  * @license http://opensource.org/licenses/MIT MIT
@@ -11,35 +11,43 @@
 namespace RdFontAwesome\App\Controllers\Admin;
 
 
+if (!defined('ABSPATH')) {
+    exit();
+}
+
+
 if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
     /**
-     * Settings class.
+     * Admin settings page.
      */
     class Settings extends \RdFontAwesome\App\Controllers\BaseController
     {
 
 
         /**
-         * Enqueue scripts and styles here.
+         * @var string Settings menu slug. This class constant visibility must be public.
          */
-        public function enqueueScriptsStyles()
-        {
-            // enqueue style.
-            wp_enqueue_style('rd-fontawesome-settings', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/css/admin/settings.css', [], RDFONTAWESOME_VERSION);
+        const MENU_SLUG = 'rd-fontawesome-settings';
 
-            // enqueue script.
-            wp_register_script('rd-fontawesome-settings', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/js/admin/settings.js', ['jquery'], RDFONTAWESOME_VERSION, true);
-            wp_localize_script(
-                'rd-fontawesome-settings',
-                'RdFontAwesomeSettingsObject', 
-                [
-                    'nonce' => wp_create_nonce('rdfontawesome_ajaxnonce'),
-                    'txtDismissNotice' => __('Dismiss this notice.', 'rd-fontawesome'),
-                    'txtLoading' => __('Loading', 'rd-fontawesome'),
-                ]
-            );
-            wp_enqueue_script('rd-fontawesome-settings');
-        }// enqueueScriptsStyles
+
+        /**
+         * @var string The current admin page.
+         */
+        private $hookSuffix = '';
+
+
+        /**
+         * Allow code/WordPress to call hook `admin_enqueue_scripts` 
+         * then `wp_register_script()`, `wp_localize_script()`, `wp_enqueue_script()` functions will be working fine later.
+         * 
+         * @link https://wordpress.stackexchange.com/a/76420/41315 Original source code.
+         * @since 2025-10-14 On Rundiz Plugin Template
+         * @since 1.0.8
+         */
+        public function callEnqueueHook()
+        {
+            add_action('admin_enqueue_scripts', [$this, 'registerScripts']);
+        }// callEnqueueHook
 
 
         /**
@@ -97,12 +105,15 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
 
 
         /**
-         * Setup settings menu to go to settings page.
+         * The plugin settings sub menu to go to settings page.
          */
         public function pluginSettingsMenu()
         {
-            $hook_suffix = add_options_page(__('Rundiz Font Awesome settings', 'rd-fontawesome'), __('Rundiz Font Awesome', 'rd-fontawesome'), 'manage_options', 'rd-fontawesome-settings', [$this, 'pluginSettingsPage']);
-            add_action('load-' . $hook_suffix, [$this, 'enqueueScriptsStyles']);
+            $hook_suffix = add_options_page(__('Rundiz Font Awesome settings', 'rd-fontawesome'), __('Rundiz Font Awesome', 'rd-fontawesome'), 'manage_options', static::MENU_SLUG, [$this, 'pluginSettingsPage']);
+            if (is_string($hook_suffix)) {
+                $this->hookSuffix = $hook_suffix;
+                add_action('load-' . $hook_suffix, [$this, 'callEnqueueHook']);
+            }
             unset($hook_suffix);
         }// pluginSettingsMenu
 
@@ -115,7 +126,6 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
             // check permission.
             if (!current_user_can('manage_options')) {
                 wp_die(esc_html__('You do not have permission to access this page.', 'rd-fontawesome'));
-                exit();
             }
 
             $output = [];
@@ -148,10 +158,39 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Admin\\Settings')) {
          */
         public function registerHooks()
         {
-            if (is_admin()) {
-                add_action('admin_menu', [$this, 'pluginSettingsMenu']);
-            }
+            add_action('admin_menu', [$this, 'pluginSettingsMenu']);
         }// registerHooks
+
+
+        /**
+         * Enqueue scripts and styles here.
+         * 
+         * @param string $hook_suffix The current admin page.
+         */
+        public function registerScripts(string $hook_suffix = '')
+        {
+            if ($hook_suffix !== $this->hookSuffix) {
+                return;
+            }
+
+            // enqueue style.
+            wp_enqueue_style('rd-fontawesome-handle-settings', plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/css/admin/settings.css', [], RDFONTAWESOME_VERSION);
+
+            // enqueue script.
+            $handleName = 'rd-fontawesome-handle-settings';
+            wp_register_script($handleName, plugin_dir_url(RDFONTAWESOME_FILE) . 'assets/js/admin/settings.js', ['jquery'], RDFONTAWESOME_VERSION, true);
+            wp_localize_script(
+                $handleName,
+                'RdFontAwesomeSettingsObject', 
+                [
+                    'nonce' => wp_create_nonce(SettingsAjax::AJAX_NONCE),
+                    'txtDismissNotice' => __('Dismiss this notice.', 'rd-fontawesome'),
+                    'txtLoading' => __('Loading', 'rd-fontawesome'),
+                ]
+            );
+            wp_enqueue_script($handleName);
+            unset($handleName);
+        }// registerScripts
 
 
     }// Settings

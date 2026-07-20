@@ -1,10 +1,10 @@
 === Rundiz Font Awesome ===
 Contributors: okvee
 Tags: fontawesome, font awesome, icons
-Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 1.0.7
+Requires at least: 5.0
 Requires PHP: 7.0
+Stable tag: 1.0.7
 License: MIT
 License URI: https://opensource.org/licenses/MIT
  

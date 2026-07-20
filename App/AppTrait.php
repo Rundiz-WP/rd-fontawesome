@@ -1,6 +1,6 @@
 <?php
 /**
- * App trait.
+ * Main app trait for common works.
  * 
  * @package rd-fontawesome
  * @license http://opensource.org/licenses/MIT MIT
@@ -12,14 +12,17 @@ namespace RdFontAwesome\App;
 
 
 if (!trait_exists('\\RdFontAwesome\\App\\AppTrait')) {
+    /**
+     * Main application trait.
+     */
     trait AppTrait
     {
 
 
         /**
-         * @var \RdFontAwesome\App\Libraries\Loader
+         * @var \RdFontAwesome\App\Libraries\Loader The loader class if it has been initiated. Make sure that this property must be set before use.
          */
-        protected $Loader;
+        protected $Loader = null;
 
 
         /**

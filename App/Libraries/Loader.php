@@ -11,6 +11,11 @@
 namespace RdFontAwesome\App\Libraries;
 
 
+if (!defined('ABSPATH')) {
+    exit();
+}
+
+
 if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Loader')) {
     /**
      * Loader class.
@@ -66,16 +71,12 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Loader')) {
                         if (
                             !$TestClass->isAbstract() && 
                             !$TestClass->isTrait() && 
-                            $TestClass->implementsInterface('\\RdFontAwesome\\App\\Controllers\\ControllerInterface')
+                            $TestClass->implementsInterface('\\RdFontAwesome\\App\\Controllers\\ControllerInterface') &&
+                            $TestClass->isSubclassOf(\RdFontAwesome\App\Controllers\BaseController::class)
                         ) {
                             $ControllerClass = new $this_file_classname();
                             $ControllerClass->Loader = $this->App->Loader;
-                            if (
-                                $ControllerClass instanceof \RdFontAwesome\App\Controllers\BaseController && 
-                                method_exists($ControllerClass, 'registerHooks')
-                            ) {
-                                $ControllerClass->registerHooks();
-                            }
+                            $ControllerClass->registerHooks();
                             unset($ControllerClass);
                         }
                         unset($TestClass);

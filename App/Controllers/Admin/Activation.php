@@ -35,7 +35,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Controllers\\Activation')) {
             }
             
             if ($plugin === $plugin_file) {
-                $link['settings'] = '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=rd-fontawesome-settings')) . '">' . __('Settings', 'rd-fontawesome') . '</a>';
+                $link['settings'] = '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=' . rawurlencode(Settings::MENU_SLUG))) . '">' . __('Settings', 'rd-fontawesome') . '</a>';
                 $actions = array_merge($link, $actions);
             }
             

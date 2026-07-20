@@ -1,5 +1,7 @@
 <?php
 /**
+ * Main app class.
+ * 
  * @package rd-fontawesome
  * @license http://opensource.org/licenses/MIT MIT
  * @since 1.0.0
@@ -9,9 +11,14 @@
 namespace RdFontAwesome\App;
 
 
+if (!defined('ABSPATH')) {
+    exit();
+}
+
+
 if (!class_exists('\\RdFontAwesome\App\\App')) {
     /**
-     * Main app class.
+     * Plugin application main entry class.
      */
     class App
     {
@@ -21,7 +28,7 @@ if (!class_exists('\\RdFontAwesome\App\\App')) {
 
 
         /**
-         * Run the application.
+         * Run the WP plugin app.
          */
         public function run()
         {
