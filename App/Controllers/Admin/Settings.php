@@ -2,6 +2,8 @@
 /**
  * Add settings sub menu and page into the Settings menu.
  * 
+ * Original source last update: 2026-04-11
+ * 
  * @package rd-fontawesome
  * @license http://opensource.org/licenses/MIT MIT
  * @since 1.0.0

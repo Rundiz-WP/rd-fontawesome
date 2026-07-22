@@ -92,7 +92,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Loader')) {
 
         /**
          * Get file list that may contain class in specific path.
-         *
+         * 
          * @param string $path The full path without trailing slash.
          * @return array Return indexed array of file list.
          */
@@ -115,7 +115,7 @@ if (!class_exists('\\RdFontAwesome\\App\\Libraries\\Loader')) {
 
         /**
          * Load views.
-         *
+         * 
          * @param string $view_name View file name, refer from app/Views folder.
          * @param array $data For send data variable to view.
          * @param bool $require_once Set to `true` to use `include_once`, `false` to use `include`. Default is `false`.
