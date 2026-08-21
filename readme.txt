@@ -4,7 +4,7 @@ Tags: fontawesome, font awesome, icons
 Tested up to: 7.0
 Requires at least: 5.0
 Requires PHP: 7.0
-Stable tag: 1.0.8
+Stable tag: 1.0.9
 License: MIT
 License URI: https://opensource.org/licenses/MIT
  
@@ -72,6 +72,11 @@ This plugin download all necessary files that is ready to use such as CSS, fonts
 1. Settings page.
 
 == Changelog ==
+= 1.0.9 =
+2026-08-22
+
+* Fix translation bug in multi-site enabled. ( https://core.trac.wordpress.org/ticket/64249 ).
+
 = 1.0.8 =
 2026-07-20
 

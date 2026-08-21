@@ -3,7 +3,7 @@
  * Plugin Name: Rundiz Font Awesome
  * Plugin URI: https://rundiz.com/?p=319
  * Description: Use Font Awesome from your host and update from GitHub.
- * Version: 1.0.8
+ * Version: 1.0.9
  * Requires at least: 5.0
  * Requires PHP: 7.0
  * Author: Vee Winch
@@ -11,7 +11,7 @@
  * License: MIT
  * License URI: https://opensource.org/licenses/MIT
  * Text Domain: rd-fontawesome
- * Domain Path: /App/languages
+ * Domain Path: /App/languages/
  * 
  * @package rd-fontawesome
  */
