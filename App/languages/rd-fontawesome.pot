@@ -2,21 +2,21 @@
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Rundiz Font Awesome 1.0.7\n"
+"Project-Id-Version: Rundiz Font Awesome 1.0.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/rd-fontawesome\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-07T09:04:44+07:00\n"
+"POT-Creation-Date: 2026-08-22T00:36:10+07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: rd-fontawesome\n"
 
 #. Plugin Name of the plugin
 #: rd-fontawesome.php
-#: App/Controllers/Admin/Settings.php:104
+#: App/Controllers/Admin/Settings.php:114
 msgid "Rundiz Font Awesome"
 msgstr ""
 
@@ -49,90 +49,90 @@ msgstr ""
 msgid "Donate"
 msgstr ""
 
-#: App/Controllers/Admin/Settings.php:37
-msgid "Dismiss this notice."
-msgstr ""
-
-#: App/Controllers/Admin/Settings.php:38
-msgid "Loading"
-msgstr ""
-
-#: App/Controllers/Admin/Settings.php:104
+#: App/Controllers/Admin/Settings.php:114
 msgid "Rundiz Font Awesome settings"
 msgstr ""
 
-#: App/Controllers/Admin/Settings.php:117
-#: App/Controllers/Admin/SettingsAjax.php:61
-#: App/Controllers/Admin/SettingsAjax.php:208
-#: App/Controllers/Admin/SettingsAjax.php:240
-#: App/Controllers/Admin/SettingsAjax.php:382
-#: App/Controllers/Admin/SettingsAjax.php:417
+#: App/Controllers/Admin/Settings.php:130
+#: App/Controllers/Admin/SettingsAjax.php:75
+#: App/Controllers/Admin/SettingsAjax.php:222
+#: App/Controllers/Admin/SettingsAjax.php:254
+#: App/Controllers/Admin/SettingsAjax.php:396
+#: App/Controllers/Admin/SettingsAjax.php:431
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: App/Controllers/Admin/Settings.php:137
+#: App/Controllers/Admin/Settings.php:149
 msgid "Invalid request."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:81
-#: App/Controllers/Admin/SettingsAjax.php:224
+#: App/Controllers/Admin/Settings.php:189
+msgid "Dismiss this notice."
+msgstr ""
+
+#: App/Controllers/Admin/Settings.php:190
+msgid "Loading"
+msgstr ""
+
+#: App/Controllers/Admin/SettingsAjax.php:95
+#: App/Controllers/Admin/SettingsAjax.php:238
 msgid "Your request rate limit on GItHub has been exceeded."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:129
+#: App/Controllers/Admin/SettingsAjax.php:143
 msgid "You have installed latest version of Font Awesome. However, there are some files or directories that is unable to move to target path."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:145
+#: App/Controllers/Admin/SettingsAjax.php:159
 msgid "Success! You have installed latest version of Font Awesome."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:162
+#: App/Controllers/Admin/SettingsAjax.php:176
 msgid "Success! Your Font Awesome is already latest version."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:178
+#: App/Controllers/Admin/SettingsAjax.php:192
 msgid "Unable to retrieve latest version from GitHub."
 msgstr ""
 
 #. translators: %1$s open link, %2$s close link.
-#: App/Controllers/Admin/SettingsAjax.php:286
+#: App/Controllers/Admin/SettingsAjax.php:300
 #, php-format
 msgid "Save is pending. Please open your %1$shome%2$s to let scaning process work for scan dequeue files and come back to save again."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:316
-#: App/Controllers/Admin/SettingsAjax.php:365
+#: App/Controllers/Admin/SettingsAjax.php:330
+#: App/Controllers/Admin/SettingsAjax.php:379
 msgid "Saved successfully."
 msgstr ""
 
 #. translators: %1$s the scanned result.
-#: App/Controllers/Admin/SettingsAjax.php:319
+#: App/Controllers/Admin/SettingsAjax.php:333
 #, php-format
 msgid "Some of your handles were removed due to failed to verify it's Font Awesome. (%1$s)"
 msgstr ""
 
 #. translators: %1$s the result of scanned CSS.
-#: App/Controllers/Admin/SettingsAjax.php:321
+#: App/Controllers/Admin/SettingsAjax.php:335
 #, php-format
 msgid "CSS: %1$s"
 msgstr ""
 
 #. translators: %1$s the result of scanned JS.
-#: App/Controllers/Admin/SettingsAjax.php:323
+#: App/Controllers/Admin/SettingsAjax.php:337
 #, php-format
 msgid "JS: %1$s"
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:394
+#: App/Controllers/Admin/SettingsAjax.php:408
 msgid "Success!"
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:399
+#: App/Controllers/Admin/SettingsAjax.php:413
 msgid "Your access token is incorrect."
 msgstr ""
 
-#: App/Controllers/Admin/SettingsAjax.php:443
+#: App/Controllers/Admin/SettingsAjax.php:457
 msgid "Font Awesome files were removed successfully."
 msgstr ""
 
